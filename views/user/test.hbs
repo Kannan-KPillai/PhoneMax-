@@ -1,0 +1,74 @@
+
+
+<section class="vh-100 bg-image" style="background-color: #151515;">
+  <div class="mask d-flex align-items-center h-100 gradient-custom-3">
+    <div class="container h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+          <div class="card" style="border-radius: 15px;">
+            <div class="card-body p-5">
+              <h2 class="text-uppercase text-center mb-5" style="font-size: 1rem">Create an account</h2>
+
+              <form  action="/signup" method="post">
+
+              
+                <div class="form-outline mb-4">
+                  <input type="text" name="Name" class="form-control form-control-lg" required />
+                  <label class="form-label" name="Name">Your Name</label>
+                  <div class="invalid-feedback">
+                    Please enter your name.
+                  </div>
+                </div>
+
+                <div class="form-outline mb-4">
+                  <input type="email" name="Email" class="form-control form-control-lg" required />
+                  <label class="form-label" name="Email">Your Email</label>
+                  <div class="invalid-feedback">
+                    Please enter a valid email address.
+                  </div>
+                </div>
+
+                <div class="form-outline mb-4">
+                  <input type="password" name="Password"  class="form-control form-control-lg" required />
+                  <label class="form-label" name="Password" >Password</label>
+                  <div class="invalid-feedback">
+                    Please enter a password.
+                  </div>
+                </div>
+
+                {{!-- <div class="form-outline mb-4">
+                  <input type="password" id="form3Example4cdg" class="form-control form-control-lg" required />
+                  <label class="form-label" for="form3Example4cdg">Repeat your password</label>
+                  <div class="invalid-feedback">
+                    Please repeat your password.
+                  </div>
+                </div> --}}
+
+                <div class="d-flex justify-content-center">
+                  <button type="submit" class="btn btn-success btn btn-dark btn-lg btn-block" style="color: #ffff">
+                    Register
+                  </button>
+                </div>
+
+                <p class="text-center text-muted mt-5 mb-0 pb-3">Have already an account? <a href="/login" class="fw-bold text-body"><u>Login here</u></a></p>
+
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // JavaScript form validation
+  document.getElementById('registrationForm').addEventListener('submit', function (event) {
+    if (!this.checkValidity()) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    this.classList.add('was-validated');
+  });
+</script>

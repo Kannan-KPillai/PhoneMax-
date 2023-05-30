@@ -1,0 +1,135 @@
+{{!-- 
+
+<section>
+    <div class="container">
+     
+        <table class="table mt-4" id="userTable" >
+            <thead class="thead-dark">
+                <tr>
+                     <th scope="col">➩</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                     <th scope="col">Options</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {{#each users}}
+                <tr>
+                    <th scope="row">.</th>
+                    <td>{{this.Name}}</td>
+                    <td>{{this.Email}}</td>
+                   
+                    <td>
+                        {{#if this.isBlocked}}
+                        <a href="/admin/unblock-user/{{this._id}}" class="btn btn-primary"onclick="return confirm('Are you sure you want to unblock the user? {{this.Name}}?')">Unblock</a>
+                        {{else}}
+                        <a href="/admin/block-user/{{this._id}}" class="btn btn-danger" onclick="return confirm('Are you sure you want to block the user? {{this.Name}}?')" >Block</a>
+                        {{/if}}
+                    </td>
+                     
+                </tr>
+                {{/each}}
+         
+            </tbody>
+        </table>
+    </div>
+</section> 
+
+
+
+
+ <script>
+  $(function(){
+    $('#userTable').DataTable({
+        "dom": '<"top"i>rt<"bottom"flp><"clear">',
+    });
+  })
+</script> --}}
+
+
+
+<section>
+  <div class="container">
+    <table class="table mt-4" id="userTable">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">➩</th>
+          <th scope="col">Name</th>
+          <th scope="col">Email</th>
+          <th scope="col">Options</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each users}}
+        <tr>
+          <th scope="row">.</th>
+          <td>{{this.Name}}</td>
+          <td>{{this.Email}}</td>
+          <td>
+            {{#if this.isBlocked}}
+            <a href="/admin/unblock-user/{{this._id}}" class="btn btn-primary" onclick="return confirm('Are you sure you want to unblock the user {{this.Name}}?')">Unblock</a>
+            {{else}}
+            <a href="/admin/block-user/{{this._id}}" class="btn btn-danger" onclick="return confirm('Are you sure you want to block the user {{this.Name}}?')">Block</a>
+            {{/if}}
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<style>
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding-bottom: 2rem;
+  }
+
+  .table {
+    font-size: 14px;
+  }
+
+  .table thead th {
+    font-weight: bold;
+    vertical-align: middle;
+    color: #fff;
+    background-color: #343a40;
+    border-color: #343a40;
+  }
+
+  .table tbody td {
+    vertical-align: middle;
+  }
+
+  .btn-primary,
+  .btn-danger {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+
+  .btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+  }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+
+<script>
+  $(function () {
+    $('#userTable').DataTable({
+      "dom": '<"top"i>rt<"bottom"flp><"clear">',
+    });
+  })
+</script>

@@ -1,0 +1,115 @@
+{{!-- <header>
+        <nav class="navbar navbar-expand-lg navbar-light " style="background-color: black;">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03"
+                aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+             <button onclick="history.back()" style="background-color: black;  color: white;">Go Back</button>
+
+            <a class="navbar-brand" style="font-size: xx-large; font-weight: bold; color:white; padding-left: 50px;">PhoneMax</a>
+
+
+
+            <div class="collapse navbar-collapse"  id="navbarTogglerDemo03">
+                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                   
+                    <li class="nav-item active">
+                        <a class="nav-link" style="color: white;" href="/">Menu<span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" style="color:white;" href="#">Cart</a>
+                    </li>
+                    {{#if user}}
+                       <li class="nav-item">
+                        <a class="nav-link" style="color: white;" href="#">Orders</a>
+                    </li>
+                    {{/if}}
+                </ul>
+                <div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    {{#if user}}
+       {{user.Name}}
+       {{else}}  
+    Account
+    {{/if}}
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      {{#if user}}
+     <a class="dropdown-item" href="/logout">Logout</a>
+       {{else}}  
+       <a class="dropdown-item" href="/login">Login</a>
+    {{/if}}
+    
+    
+  </div>
+</div>
+            </div>
+        </nav>
+ 
+    </header> --}}
+
+
+    <header>
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: black;">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03"
+            aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <button onclick="history.back()" style="background-color: black; color: white;">Go Back</button>
+
+        <a class="navbar-brand" style="font-size: xx-large; font-weight: bold; color:white; padding-left: 50px;">PhoneMax</a>
+
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item active">
+                    <a class="nav-link" style="color: white;" href="/">Menu<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" style="color: white;" href="/all-products">All Products</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" style="color: white;" href="/cart">Cart  <span class="badge badge-light">{{cartCount}}</span></a>
+                </li>
+                {{#if user}}
+                <li class="nav-item">
+                    <a class="nav-link" style="color: white;" href="#">Orders</a>
+                </li>
+                {{/if}}
+            </ul>
+
+            <!-- Search Bar -->
+            <form class="form-inline my-2 my-lg-0">
+                <input id="searchInput" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                {{!-- <button class="btn btn-outline-light my-2 my-sm-0" type="submit" onclick="searchFunction()">Search</button> --}}
+            </form>
+
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{#if user}}
+                    {{user.Name}}
+                    {{else}}
+                    Account
+                    {{/if}}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    {{#if user}}
+                    <a class="dropdown-item" href="/logout">Logout</a>
+                    {{else}}
+                    <a class="dropdown-item" href="/login">Login</a>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<script>
+    function searchFunction() {
+        event.preventDefault(); // Prevents the form from submitting and page reload
+        var searchTerm = document.getElementById("searchInput").value;
+        // Perform search functionality with the searchTerm
+        console.log("Searching for: " + searchTerm);
+        // Add your own logic here for handling the search functionality
+    }
+</script>

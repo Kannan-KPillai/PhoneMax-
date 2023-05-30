@@ -1,0 +1,145 @@
+{{!-- 
+
+<section>
+    <div class="container">
+        <div class="row mt-4">
+            <a href="/admin/add-category" class="btn btn-success ml-auto">Add Categories</a>
+
+        </div>
+        
+        <table class="table mt-5 "id="productsTable" >
+  <thead>
+    <tr>
+      
+      <th scope="col">Image</th>
+      <th scope="col">Category</th>
+      <th scope="col">Brand</th>
+      <th scope="col"></th>
+      
+      <th>Option</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each category}}
+    <tr>
+    
+       <td><img style="width: 50px; height: 50px;" src="/category-image/{{this._id}}.jpg" alt=""></td>
+     <td>{{this.category}}</td>
+      <td>{{this.brand}}</td>
+      <td>{{this.Status}}</td>
+      <td>
+      
+        <a href="/admin/edit-category/{{this._id}}" class="btn btn-primary">Edit</a>
+          {{#if this.isHide}} 
+         <a href="/admin/show-category/{{this._id}}" class="btn btn-success" onclick="return confirm('Are you want to Show{{this.Name}}')">Show</a>
+          {{else}}
+           <a href="/admin/hide-category/{{this._id}}" class="btn btn-danger" onclick="return confirm('Are you want to Hide{{this.Name}}')">Hide</a>
+          {{/if}}
+      </td>
+    </tr>
+   {{/each}}
+  </tbody>
+</table>
+    </div>
+</section> --}}
+
+
+
+<section>
+  <div class="container">
+    <div class="row mt-4">
+      <a href="/admin/add-category" class="btn btn-success ml-auto">Add Categories</a>
+    </div>
+    
+    <div class="table-responsive mt-5">
+      <table class="table table-bordered table-hover" id="productsTable">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Image</th>
+            <th scope="col">Category</th>
+            <th scope="col">Brand</th>
+            <th scope="col">Status</th>
+            <th scope="col">Options</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each category}}
+          <tr>
+            <td><img style="width: 50px; height: 50px;" src="/category-image/{{this._id}}.jpg" alt=""></td>
+            <td>{{this.category}}</td>
+            <td>{{this.brand}}</td>
+            <td>{{this.Status}}</td>
+            <td>
+              <a href="/admin/edit-category/{{this._id}}" class="btn btn-primary btn-sm">Edit</a>
+              {{#if this.isHide}}
+              <a href="/admin/show-category/{{this._id}}" class="btn btn-success btn-sm" onclick="return confirm('Are you sure you want to show {{this.category}}')">Show</a>
+              {{else}}
+              <a href="/admin/hide-category/{{this._id}}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to hide {{this.category}}')">Hide</a>
+              {{/if}}
+            </td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<style>
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding-bottom: 2rem;
+  }
+
+  .btn {
+    border-radius: 0;
+  }
+
+  .btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+
+  .btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+  }
+
+  .table-responsive {
+    border: none;
+  }
+
+  .table {
+    font-size: 14px;
+  }
+
+  .table thead th {
+    font-weight: bold;
+    vertical-align: middle;
+    color: #fff;
+    background-color: #343a40;
+    border-color: #343a40;
+  }
+
+  .table tbody td {
+    vertical-align: middle;
+  }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+
+<script>
+  $(function () {
+    $('#productsTable').DataTable({
+      "dom": '<"top"i>rt<"bottom"flp><"clear">',
+    });
+  })
+</script>

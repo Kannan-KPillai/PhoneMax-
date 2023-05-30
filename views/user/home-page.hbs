@@ -1,0 +1,79 @@
+
+
+<div style="height: 60px; background-color: rgba(21, 21, 21, 1); display: flex; align-items: center; justify-content: center;">
+    <h4 style="color: white;">Buy Your Favorite Smart Phone from PhoneMax</h4>
+</div>
+
+
+<div class="bg-image d-flex justify-content-center align-items-center" 
+style="background-image: url(https://d2d22nphq0yz8t.cloudfront.net/88e6cc4b-eaa1-4053-af65-563d88ba8b26/https://media.croma.com/image/upload/v1684242615/Croma%20Assets/CMS/CAtegory/Mobile%20phone%20-%20C10/16-05-23/Desktop/Main%20Banner/D_main-banner_hat0zq.png/mxw_2048,f_auto);
+background-repeat:no-repeat; background-size:cover; height: 400px; width:100%">
+</div>
+
+
+
+
+      <section style="background-color: rgba(53, 53, 53, 1)">
+  <div class="text-center container py-3">
+    <h4 class="mt-4 mb-3" style="color: white;"><strong>Latest Mobile Phones For You</strong></h4>
+
+    <div class="row">
+      {{#each products}}
+      <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card" style="background-color: rgba(53, 53, 53, 1); height: 100%;">
+          <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light" data-mdb-ripple-color="light">
+            <a href="/productdetails/{{this._id}}"><img src="/product-image/{{this._id}}.jpg" class="card-img-top" alt="..." /></a>
+            <a href="#!">
+              <div class="mask">
+                <div class="d-flex justify-content-start align-items-end h-100">
+                  <h5><span class="badge bg-primary ms-2" style="color: blanchedalmond;">New</span></h5>
+                </div>
+              </div>
+              <div class="hover-overlay">
+                <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
+              </div>
+            </a>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title mb-2" style="color: white;">{{this.name}}</h5>
+            <p style="color: white;">{{this.category}}</p>
+            <h6 class="mb-2" style="color: white;">{{this.price}}</h6>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+</section>
+
+
+
+           
+    <section  style="background-color: rgba(21, 21, 21, 1)">
+        <div class="container">
+            <div class="row">
+                {{#each category}}
+                {{#if isHide}}
+
+                {{else}}
+                <div class="col-md-3 p-3">
+                    <div class="card" style="width: 15rem;">
+                        <a href="/categorydetails/{{this._id}}">
+                        <img src="/category-image/{{this._id}}.jpg" class="card-img-top" alt="..."></a>
+                        <div class="card-body">
+                            <td>{{this.category}}</td>
+                           <td>{{this.brand}}</td>  
+                        </div>
+                    </div>
+                </div>
+                {{/if}}
+                {{/each}}
+            </div>
+        </div>
+    </section>
+   
+
+    <div class="bg-image d-flex justify-content-center align-items-center" 
+style="background-image: url(https://images-eu.ssl-images-amazon.com/images/G/31/img19/Wireless/MobileAccessories/OnePlus_accessories/PC_accesories_banner._CB443675846_.jpg);
+background-repeat:no-repeat; background-size:cover; height: 400px; width:100%">
+</div>

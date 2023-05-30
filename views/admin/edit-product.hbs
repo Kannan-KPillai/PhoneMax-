@@ -1,0 +1,53 @@
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-info">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03"
+            aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+<a class="navbar-brand d-flex justify-content-center" style="font-size: x-large; font-weight: bold; background-color: white; width: 100%; height: 10 px;">
+    PhoneMax Admin Panel
+</a>
+  </nav>
+</header>
+
+<section>
+    <div class="container mt-4">
+    <div class="row">
+
+        <div class="col-md-6">
+            <h2 class="text-center">Edit Product</h2>
+            <form action="/admin/edit-product/{{product._id}}" method="POST" enctype="multipart/form-data">
+                <label for="">Name</label>
+                <input type="text" name="name" class="form-control" value="{{product.name}}"> 
+
+               
+                <select name="category" class="form-control" required>
+            <option value="{{product.category}}">{{product.category}}</option>
+            {{#each category}}
+            <option >{{this.category}}</option>
+            {{/each}}
+          </select> 
+
+                <label for="">Price</label>
+                <input type="text" name="price" class="form-control" value="{{prodcut.price}}"> 
+
+                <label for="">Description</label>
+                <input type="text" name="description" class="form-control" value="{{product.description}}"> 
+
+                <label for="">Image</label>
+                <img src="/product-image/{{product._id}}.jpg" alt="" style="width:100px; height:auto" id="imgView">
+                <input type="file" name="Image" class="form-control" onchange="viewImage(event)"> 
+                <button type="submit" class="btn btn-success mt-4">Submit</button>
+            </form>
+
+        </div>
+
+    </div>
+   </div>
+</section>
+<script>
+   function viewImage(event){
+    document.getElementById('imgView').src=URL.createObjectURL(event.target.files[0])
+   }
+
+</script>

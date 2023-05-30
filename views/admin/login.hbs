@@ -1,0 +1,41 @@
+
+</header>
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Admin Login</title>
+    
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f8f9fa;">
+    <div style="width: 380px; padding: 20px; background-color: #fff; border-radius: 5px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
+        <div style="text-align: center;">
+            <h2 style="margin-bottom: 20px;">Admin Login</h2>
+        </div>
+
+        {{#if loginErr}}
+            <p style="color: orangered; text-align: center;">{{loginErr}}</p>
+        {{/if}}
+            
+        <form action="/admin/adminLogin" method="POST" style="margin-bottom: 20px;">
+            <input type="text" id="login" style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px;" name="Email" placeholder="Admin email">
+            <input type="password" id="password" style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px;" name="Password" placeholder="Password" autocomplete="off">
+            <input type="submit" value="Log In" style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px; background-color: #007bff; color: #fff; border: none; cursor: pointer;">
+        </form>
+
+        <div style="text-align: center;">
+            <h2>ADMIN MODE</h2>
+        </div>
+
+        <div style="text-align: center;">
+            <a href="/login" style="text-decoration: none;">
+                
+            </a>
+        </div>
+    </div>
+</body>
+</html>
