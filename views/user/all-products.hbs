@@ -42,14 +42,11 @@
                   class="btn btn-primary btn-sm" style="color: white;" type="button">Details</a>
                   <button class="btn btn-outline-primary btn-sm mt-2" type="button">
                     Add to wishlist
-                  </button>
-                   {{!-- <button class="btn btn-outline-primary btn-sm mt-2" type="button" >
+                  </button> 
+                  {{!-- <a href="/add-to-cart/{{this._id}}" class="btn btn-outline-primary btn-sm mt-2">
                     Add to cart
-                  </button> --}}
-                  <a href="/add-to-cart/{{product._id}}" class="btn btn-outline-primary btn-sm mt-2">
-                    Add to cart
-                  </a>
-
+                  </a> --}}
+                  <button onclick="addToCart('{{this._id}}')" class="btn btn-outline-primary btn-sm mt-2">Add to Cart</button>
                 </div>
               </div>
             </div>
@@ -62,3 +59,6 @@
       {{/each}}
     </div>
    </section>
+
+
+  

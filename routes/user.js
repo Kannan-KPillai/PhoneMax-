@@ -195,16 +195,16 @@ router.get('/all-products', function (req, res) {
 // ********** Cart management get and post methods ******************
 
 router.get('/cart',verifyLogin,async(req,res)=>{
-  let product=await userHelpers.getCartProducts(req.session.user._id)
-  console.log(product);
-  res.render('user/cart',{  user: true, guest: true,product, user:req.session.user})
+  let products=await userHelpers.getCartProducts(req.session.user._id)
+  console.log(products);
+  res.render('user/cart',{  user: true, guest: true,products, user:req.session.user})
 })
 
 
 router.get('/add-to-cart/:id',verifyLogin,(req,res)=>{
   console.log(req.params.id)
   userHelpers.addToCart(req.params.id, req.session.user._id).then(()=>{
-    res.redirect('/')
+    // res.redirect('/')
   })
 })
 
