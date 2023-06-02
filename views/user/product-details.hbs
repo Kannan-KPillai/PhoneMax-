@@ -116,7 +116,7 @@
   </style>
 </head>
 <body>
-  <div class="img-container">
+  <div class="img-container"> 
     <div class="first">
       <span class="lens"></span>
     </div>
@@ -141,7 +141,8 @@
         </div>
         <div class="cart mt-4 align-items-center">
           {{!-- <button  ">Add to cart</button> --}}
-         <a href="/add-to-cart/{{product._id}}" class="btn btn-danger text-uppercase">Add to cart</a>
+         {{!-- <a href="/add-to-cart/{{product._id}}" class="btn btn-danger text-uppercase">Add to cart</a> --}}
+         <button onclick="addToCart('{{this._id}}')" class="btn btn-outline-primary btn-sm mt-2">Add to Cart</button>
          <i class="fa fa-heart text-muted"></i>
           <i class="fa fa-share-alt text-muted"></i>
         </div>

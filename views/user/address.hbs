@@ -1,0 +1,156 @@
+<section class="bg-light py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-xl-8 col-lg-8 mb-4">
+        <!-- Address Selection -->
+        <div class="card shadow-0 border">
+          <div class="p-4">
+            <h5 class="card-title mb-3">Delivery Address</h5>
+            <div class="row">
+              <!-- Existing Addresses -->
+              <div class="col-md-6">
+              
+                <div class="card mb-3">
+                  <div class="card-body">
+                    <div class="form-check">
+                      <input class="form-check-input address-checkbox" type="radio" name="addressSelection" id="address{{this._id}}" value="{{this._id}}">
+                      <label class="form-check-label" for="address{{this._id}}">
+                        <h5 class="card-title">{{this.address}}</h5>
+                        <p class="card-text">{{this.country}}</p>
+                      </label>
+                    </div>
+                    <a href="/edit_address?id={{this._id}}" class="btn btn-primary">Edit</a>
+                    <a href="/delete_address?id={{this._id}}" class="btn btn-danger">Delete</a>
+                  </div>
+                </div>
+           
+              </div>
+              <!-- Add New Address -->
+              <div class="col-md-6">
+                <div class="card mb-3">
+                  <div class="card-body">
+                    <div class="form-check mb-3">
+                      <input class="form-check-input" type="checkbox" id="addNewAddressCheckbox">
+                      <label class="form-check-label" for="addNewAddressCheckbox">
+                        Add New Address
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-4 col-lg-4 mb-4">
+        <!-- Payment Method -->
+        <div class="card shadow-0 border bg-white">
+          <div class="p-4">
+            <h5 class="card-title mb-3">Payment Method</h5>
+            <form action="/select_payment" method="post">
+              <!-- Payment method options -->
+              <div class="mb-3">
+                <label for="paymentMethod" class="form-label">Select Payment Method</label>
+                <select id="paymentMethod" name="paymentMethod" class="form-control" required>
+                  <option value="">Select</option>
+                  <option value="creditCard">Credit Card</option>
+                  <option value="paypal">PayPal</option>
+                  <option value="bankTransfer">Bank Transfer</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary">Proceed to Payment</button>
+            </form>
+          </div>
+        </div>
+        <!-- Total Price -->
+        <div class="card shadow-0 border bg-white mt-4">
+          <div class="p-4">
+            <h5 class="card-title mb-3">Total Price</h5>
+            <p class="card-text">Total: ₹ {{total}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Add New Address Modal -->
+<div id="newAddressModal" class="modal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add New Address</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="newAddressForm" action="/add_address" method="post">
+          <div class="mb-3">
+            <label for="fullName" class="form-label">Full Name</label>
+            <input type="text" id="fullName" name="fullName" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label for="houseNo" class="form-label">House No./Name</label>
+            <input type="text" id="houseNo" name="houseNo" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label for="streetAddress" class="form-label">Street Address</label>
+            <input type="text" id="streetAddress" name="streetAddress" class="form-control" required>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="zipCode" class="form-label">Zip Code</label>
+              <input type="text" id="zipCode" name="zipCode" class="form-control" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="mobileNo" class="form-label">Mobile No.</label>
+              <input type="text" id="mobileNo" name="mobileNo" class="form-control" required>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="district" class="form-label">District</label>
+              <input type="text" id="district" name="district" class="form-control" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="state" class="form-label">State</label>
+              <input type="text" id="state" name="state" class="form-control" required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="country" class="form-label">Country</label>
+            <input type="text" id="country" name="country" class="form-control" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Add Address</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Modal
+    var newAddressModal = new bootstrap.Modal(document.getElementById('newAddressModal'), {});
+
+    // Checkbox
+    var addNewAddressCheckbox = document.getElementById('addNewAddressCheckbox');
+    addNewAddressCheckbox.addEventListener('change', function () {
+      if (addNewAddressCheckbox.checked) {
+        newAddressModal.show();
+      } else {
+        newAddressModal.hide();
+      }
+    });
+
+    // Radio buttons
+    var addressCheckboxes = document.getElementsByClassName('address-checkbox');
+    for (var i = 0; i < addressCheckboxes.length; i++) {
+      addressCheckboxes[i].addEventListener('change', function () {
+        for (var j = 0; j < addressCheckboxes.length; j++) {
+          if (addressCheckboxes[j] !== this) {
+            addressCheckboxes[j].checked = false;
+          }
+        }
+      });
+    }
+  });
+</script>

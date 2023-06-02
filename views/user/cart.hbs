@@ -15,6 +15,7 @@ background: linear-gradient(to right, rgba(21, 21, 21, 1), rgb(11, 11, 11))
 }
 
 </style>
+
 <section class="h-100 gradient-custom">
   <div class="container py-5">
     
@@ -29,11 +30,11 @@ background: linear-gradient(to right, rgba(21, 21, 21, 1), rgb(11, 11, 11))
            
             <!-- Single item -->
             <div class="row">
-               {{#each this.product}}
+              
               <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
                 <!-- Image -->
                 <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
-                  <img src="/product-image/{{this._id}}.jpg"
+                  <img src="/product-image/{{this.product._id}}.jpg"
                     class="w-100" alt="Blue Jeans Jacket" />
                   <a href="#!">
                     <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
@@ -41,50 +42,42 @@ background: linear-gradient(to right, rgba(21, 21, 21, 1), rgb(11, 11, 11))
                 </div>
                 <!-- Image -->
               </div>
-               
+              
 
               <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
                 <!-- Data -->
-                <p><strong>{{this.name}}</strong></p>
+                <p><strong>{{this.product.name}}</strong></p>
                 
               
-                <a href="" class="btn btn-danger">Remove</a>
+                <a href="#" class="btn btn-danger " onclick="removeProduct ('{{this._id}}','{{this.product._id}}')">Remove</a>
            
                 <!-- Data -->
               </div>
-
+            
+              
               <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
                 <!-- Quantity -->
-                {{!-- <div class="d-flex mb-4" style="max-width: 300px color:black">
-                  <button class="btn btn-primary px-3 me-2 " 
-                    onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-                    <i class="fas fa-minus"></i>
-                  </button>
-
-                  <div class="form-outline">
-                    <input id="form1" min="0" name="quantity" value="1" type="number" class="form-control" />
-                    <label class="form-label" for="form1">Quantity</label> 
-                  </div>
-                 <button class="btn btn-primary px-3 ms-2"
-                    onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-                    <i class="fas fa-plus"></i>
-                  </button> --}}
+                 
+                  <th scope="col">Quantity</th>
                 <td >
-                  <button class="cart-item-count mr-3">-</button>{{this.quantity}}<button class="cart-item-count ml-3">+</button>
-                </td>
+                  <button class="cart-item-count mr-3" onclick="changeQuantity('{{this._id}}','{{this.product._id}}',-1)">-</button>
+                  <span id="{{this.product._id}}">{{this.quantity}}</span> 
+                  <button class="cart-item-count ml-3" onclick="changeQuantity('{{this._id}}','{{this.product._id}}',1)">+</button>
+                 
                 </div>
                 <!-- Quantity -->
-
+                 
                 <!-- Price -->
-                <p class="text-start text-md-center">
-                  <strong>{{this.price}}</strong>
+                 <p class="text-start text-md-center">
+                  <strong>{{this.product.price}}</strong>
                 </p>
                 <!-- Price -->
               </div>
+             
             </div>
             </div>
             <!-- Single item -->
-             
+               
  
         <div class="card mb-4">
           <div class="card-body">
@@ -92,7 +85,7 @@ background: linear-gradient(to right, rgba(21, 21, 21, 1), rgb(11, 11, 11))
             <p class="mb-0">12.06.2023 - 14.06.2023</p>
           </div>
         </div>
-          {{/each}}
+           
         <div class="card mb-4 mb-lg-0">
           <div class="card-body">
              {{/each}}
@@ -119,30 +112,26 @@ background: linear-gradient(to right, rgba(21, 21, 21, 1), rgb(11, 11, 11))
           </div>
           <div class="card-body">
             <ul class="list-group list-group-flush">
-              <li
-                class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-                Products
-                <span>$53.98</span>
-              </li>
+              
               <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                 Shipping
-                <span>Gratis</span>
+                <span>Free Shipping</span>
               </li>
               <li
                 class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
                 <div>
                   <strong>Total amount</strong>
                   <strong>
-                    <p class="mb-0">(including VAT)</p>
+                    <p class="mb-0">(including GST)</p>
                   </strong>
                 </div>
-                <span><strong>$53.98</strong></span>
+                <span><strong>₹{{total}}</strong></span>
               </li>
             </ul>
-
-            <button type="button" class="btn btn-primary btn-lg btn-block">
+            <a href="/delivery-address" type="button" class="btn btn-warning btn-lg btn-block">Go to checkout</a>
+            {{!-- <button type="button" class="btn btn-primary btn-lg btn-block">
               Go to checkout
-            </button>
+            </button> --}}
           </div>
         </div>
       </div>
@@ -151,3 +140,43 @@ background: linear-gradient(to right, rgba(21, 21, 21, 1), rgb(11, 11, 11))
 </section>
 
 
+<script>
+
+function changeQuantity(cartId,proId,count){
+  let quantity = parseInt(document.getElementById(proId).innerHTML)
+  count= parseInt(count)
+  $.ajax({
+    url:'/change-product-quantity',
+    data:{ 
+          cart:cartId,
+          product:proId,
+          count:count, 
+          quantity:quantity
+    },
+    method:'post',
+    success:(response)=>{
+      if(response.removeProduct){
+        alert("Product removed from cart")
+        location.reload()
+      }else{
+        document.getElementById(proId).innerHTML=quantity+count
+      }
+    }
+  })
+}
+
+function removeProduct(cartId,proId){
+  $.ajax({
+    url:'/remove-from-cart',
+    data:{
+      cart:cartId,
+      product:proId,
+    },
+    method:'post',
+    success:(response)=>{
+        alert("Product removed from Cart")
+        location.reload()
+    }
+  })
+}
+</script>

@@ -184,6 +184,8 @@ router.get('/',async function (req, res, next) {
   })
 });
 
+//*************All products get method *************
+
 router.get('/all-products', function (req, res) {
   let user = req.session.user
   productHelpers.getAllProducts().then((products) => {
@@ -196,16 +198,42 @@ router.get('/all-products', function (req, res) {
 
 router.get('/cart',verifyLogin,async(req,res)=>{
   let products=await userHelpers.getCartProducts(req.session.user._id)
+  let total = await userHelpers.getTotalAmount(req.session.user._id)
   console.log(products);
-  res.render('user/cart',{  user: true, guest: true,products, user:req.session.user})
+  res.render('user/cart',{ guest: true,products, user:req.session.user,total})
 })
 
 
-router.get('/add-to-cart/:id',verifyLogin,(req,res)=>{
+router.get('/add-to-cart/:id',(req,res)=>{
   console.log(req.params.id)
   userHelpers.addToCart(req.params.id, req.session.user._id).then(()=>{
-    // res.redirect('/')
+   res.json({status:true})
   })
 })
+
+
+router.post('/change-product-quantity',(req,res,next)=>{
+  userHelpers.changeProductQuantity(req.body).then((response)=>{
+    res.json(response)
+  })
+})
+
+router.post('/remove-from-cart',(req,res,next)=>{
+  userHelpers.removeFromCart(req.body).then((response)=>{
+    res.json(response)
+  })
+})
+
+
+//Order related routes *********************
+
+
+
+router.get('/delivery-address',verifyLogin,async(req,res)=>{
+  let total = await userHelpers.getTotalAmount(req.session.user._id)
+  res.render('user/address',{total})
+})
+
+
 
 module.exports = router;
