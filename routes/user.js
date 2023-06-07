@@ -2,15 +2,16 @@ var express = require('express');
 var router = express.Router();
 const productHelpers = require('../helpers/product-helpers')
 const categoryHelpers = require('../helpers/category-helpers')
-const userHelpers = require('../helpers/user-helpers');
+const userHelpers = require('../helpers/user-helpers');  
 const { response } = require('../app');
 const otpGenerator = require('otp-generator')
 const nodemailer = require('nodemailer');
 const multer = require('multer');
+const {home,allProducts,login,signUp, logOut, proDetials, loginPost,signUpPost,userCart, addToCartGet,otp,
+   cartQuantityChange, cartRemove, deliveryAddress,deliveryAddressGet, orderSuccess, addNewAddressPost, useExist} = require("../controller/user-controller")
 
 
-
-
+//******** verifying login *********/
 const verifyLogin = (req, res, next) => {
   if (req.session.user) {
     next()
@@ -18,9 +19,6 @@ const verifyLogin = (req, res, next) => {
     res.redirect('/login')
   }
 }
-
-
-/* GET home page. */
 
 const goToLoginIfNotLoggedIn = (req, res, next) => {
   if (!req.session.user) {
@@ -31,208 +29,90 @@ const goToLoginIfNotLoggedIn = (req, res, next) => {
 };
 
 
+// ******** User login related route ********
+router.get("/login", login);
 
+// get  method of signup **************
+router.get("/signup",signUp);
 
-// ******** User login and Sign UP related routes ********
-router.get("/login", (req, res) => {
-  if (req.session.loggedIn) {
-    res.redirect('/')
-  } else {
-    res.render('user/login', { 'loginErr': req.session.userloginErr, "blockError": req.session.blockError })
-    req.session.userloginErr = false;
-    req.session.blockError = false;
-  }
-});
+//post method of signup ***************
 
-// get and post methods of signup **************
-router.get("/signup", (req, res) => {
-  res.render('user/signup', { 'loginErr': req.session.loginErr })
-  req.session.loginErr = false;
-});
-
-
-router.post('/signup', (req, res) => {
-userHelpers.doSignup(req.body)
-.then((response) => {
-
-  if (response == 1) {
-    req.session.loginErr = "Email already used"
-    res.redirect('/signup')
-  }
-  if (response != 1) {
-    userHelpers.doMailVarify(req.body.email)
-    const { name, Email, password } = req.body; //---1 
-    const otp = otpGenerator.generate(6, { digits: true, alphabets: false, upperCase: false, specialChars: false });//----2 
- // req.session.UserOtp=otp;      //==== 
-   userHelpers.insertOtp(req.body, otp)
-   const transporter = nodemailer.createTransport({
-   host: 'smtp.ethereal.email',
-   port: 587,
-   auth: {
-      user: 'wyman15@ethereal.email',
-      pass: 'am66euQDZmncwMhA6u'
-          }
-   });
-
-  const mailOptions = {
-
-   from: 'wyman15@ethereal.email',
-   to: Email,
-   subject: 'OTP for sign up',
-   text: ` Your OTP is ${otp}`
-  };
-   transporter.sendMail(mailOptions, (err, info) => {
-   if (err) {
-      console.log(err);
-      res.status(500).send({ message: 'Error sending OTP email' });
-      client.close();
-      return;
-          }
-   })
-   req.session.user = response
-   req.session.user.loggedIn = true
-     res.render('user/otp')
-    }
-   })
-})
+router.post('/signup', signUpPost)
 
 
 // OTP post method **************
-router.post('/otp', (req, res) => {
-
-  userHelpers.doMailCheck(req.body).then((status) => {
-
-    if (status.status) {
-
-      userHelpers.doMailVarifySuccess(req.body)
-      res.redirect("/login")
-
-    } else {
-      console.log("wrong otp" + req.session.UserOtp)
-      alert("Wrong otp")
-      res.redirect('/signup')
-    }
-  })
-})
+router.post('/otp',otp)
 
 
+
+//*********** Otp get method */
 router.get('/otp', (req, res) => {
   res.render('user/otp')
 })
 
 
-//login post methods  ************
+//login post method  ************
 
-router.post('/login', (req, res) => {
-  userHelpers.doLogin(req.body)
-    .then((response) => {
-      if (response.status) {
-        req.session.user = response.user;
-        req.session.loggedIn = true;
-        res.redirect('/');
-      } else if (response == 1) {
-        req.session.blockError = "You are blocked";
-        res.redirect('/login')
-      } else {
-        req.session.userloginErr = "Invalid username or password";
-        res.redirect('/login');
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-      req.session.userloginErr = "An error occurred while logging in";
-      res.redirect('/login');
-    });
-});
+router.post('/login',loginPost );
 
 
-// logout get methods *************
-router.get('/logout', (req, res) => {
-  req.session.user = null;
-  req.session.destroy((err) => {
-    if (err) {
-      console.log(err);
-      res.redirect('/');
-    } else {
-      res.redirect('/');
-    }
-  });
-});
+// logout get method *************
+router.get('/logout',logOut);
 
 
-//  ********* Product related routes   ********
-router.get('/productdetails/:id', async (req, res) => {
-  let product = await productHelpers.getProductDetails(req.params.id)
-  let user = req.session.user
-  // console.log(product+"gay")
-  res.render("user/product-details.hbs", { product, user: true, guest: true, user })
+//  ********* Product related get route   ********
+router.get('/productdetails/:id',proDetials)
 
-})
-
-// ******** home page get methods *******
-router.get('/',async function (req, res, next) {
-  let user = req.session.user;
-  console.log(user);
-  let cartCount= null;
-  if(req.session.user){
-  cartCount=await userHelpers.getCartCount(req.session.user._id)
-  }
-  productHelpers.getLatestProducts().then((products) => {
-    categoryHelpers.getAllCategory().then((category) => {
-      res.render('user/home-page', { category, user, products, guest: true,cartCount })
-    })
-  })
-});
+// ******** home page get method *******
+router.get('/',home);
 
 //*************All products get method *************
 
-router.get('/all-products', function (req, res) {
-  let user = req.session.user
-  productHelpers.getAllProducts().then((products) => {
-    res.render('user/all-products', { products, user, guest: true })
-  })
+router.get('/all-products',allProducts)
 
+// ********** Cart management get  method ******************
+
+router.get('/cart',verifyLogin,userCart)
+
+//*********add to cart get method ***********/
+router.get('/add-to-cart/:id',addToCartGet)
+
+//*********cart porduct quantity change post method ***********
+router.post('/change-product-quantity',cartQuantityChange)
+
+
+//**********remove from cart post method *********** 
+router.post('/remove-from-cart',cartRemove)
+
+
+//***********User Address related get route *********************
+router.get('/delivery-address',verifyLogin,deliveryAddressGet)
+
+
+//**************** User Address related post route***************
+router.post('/delivery-address',deliveryAddress)
+
+
+//************** order Success page get method ************/
+router.get('/order-success', verifyLogin,orderSuccess);
+
+
+//**************** user add new address post method *************/
+router.post('/add-new-address',addNewAddressPost)
+
+//********** use existing address get method **************/
+router.get('/use_address',useExist );
+
+
+///************** view you orders get method ******/
+
+router.get('/orders', verifyLogin,  async(req,res)=>{
+  let orders= await  userHelpers.getUserOrders(req.session.user._id)
+res.render('user/orders',{user:req.session.user,guest:true,orders})
 })
 
-// ********** Cart management get and post methods ******************
-
-router.get('/cart',verifyLogin,async(req,res)=>{
-  let products=await userHelpers.getCartProducts(req.session.user._id)
-  let total = await userHelpers.getTotalAmount(req.session.user._id)
-  console.log(products);
-  res.render('user/cart',{ guest: true,products, user:req.session.user,total})
-})
 
 
-router.get('/add-to-cart/:id',(req,res)=>{
-  console.log(req.params.id)
-  userHelpers.addToCart(req.params.id, req.session.user._id).then(()=>{
-   res.json({status:true})
-  })
-})
-
-
-router.post('/change-product-quantity',(req,res,next)=>{
-  userHelpers.changeProductQuantity(req.body).then((response)=>{
-    res.json(response)
-  })
-})
-
-router.post('/remove-from-cart',(req,res,next)=>{
-  userHelpers.removeFromCart(req.body).then((response)=>{
-    res.json(response)
-  })
-})
-
-
-//Order related routes *********************
-
-
-
-router.get('/delivery-address',verifyLogin,async(req,res)=>{
-  let total = await userHelpers.getTotalAmount(req.session.user._id)
-  res.render('user/address',{total})
-})
 
 
 

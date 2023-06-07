@@ -1,4 +1,5 @@
-<section style="background-color: rgba(21, 21, 21, 1);">
+
+ <section style="background-color: rgba(21, 21, 21, 1);">
   <div class="container py-5">
     <div class="row justify-content-center mb-3">
         {{#each products}}
@@ -33,7 +34,7 @@
               
               <div class="col-md-6 col-lg-3 col-xl-3 border-sm-start-none border-start">
                 <div class="d-flex flex-row align-items-center mb-1">
-                   <p class="card-price" style="color: white; font-size:x-large"><strong>{{this.price}}</strong></p>
+                   <p class="card-price" style="color: white; font-size:x-large"><strong>₹{{this.price}}</strong></p>
                 </div>
             
                 <h6 class="text-success">Free shipping</h6>
@@ -43,10 +44,7 @@
                   <button class="btn btn-outline-primary btn-sm mt-2" type="button">
                     Add to wishlist
                   </button> 
-                  {{!-- <a href="/add-to-cart/{{this._id}}" class="btn btn-outline-primary btn-sm mt-2">
-                    Add to cart
-                  </a> --}}
-                  <button onclick="addToCart('{{this._id}}')" class="btn btn-outline-primary btn-sm mt-2">Add to Cart</button>
+                   <button onclick="addToCart('{{this._id}}')" class="btn btn-outline-primary btn-sm mt-2">Add to Cart</button>
                 </div>
               </div>
             </div>
@@ -58,7 +56,17 @@
       </div>
       {{/each}}
     </div>
-   </section>
 
+    </nav> 
+    <nav aria-label="Page navigation example">
+<ul class="pagination justify-content-center">
+   
+    <li class="page-item"><a class="page-link" href="/all-products?p=1">1</a></li>
+    <li class="page-item"><a class="page-link" href="/all-products?p=2">2</a></li>
+    <li class="page-item"><a class="page-link" href="/all-products?p=3">3</a></li>
+   
+  </ul>
+</nav>
+   </section>  
 
   

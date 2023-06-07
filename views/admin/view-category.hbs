@@ -83,6 +83,13 @@
       </table>
     </div>
   </div>
+  <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+        <li class="page-item"><a class="page-link" href="/admin/view-category?p=1">1</a></li>
+        <li class="page-item"><a class="page-link" href="/admin/view-category?p=2">2</a></li>
+        <li class="page-item"><a class="page-link" href="/admin/view-category?p=3">3</a></li>
+      </ul>
+    </nav>
 </section>
 
 <style>
@@ -132,14 +139,4 @@
   }
 </style>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
 
-<script>
-  $(function () {
-    $('#productsTable').DataTable({
-      "dom": '<"top"i>rt<"bottom"flp><"clear">',
-    });
-  })
-</script>

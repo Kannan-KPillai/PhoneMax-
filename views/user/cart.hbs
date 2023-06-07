@@ -1,4 +1,4 @@
-{{!-- <h1>Hellooooo</h1> --}}
+{{#if emptyError}}
 
 <style>
 .gradient-custom {
@@ -14,16 +14,130 @@ background: linear-gradient(to right, rgba(21, 21, 21, 1), rgb(11, 11, 11))
 
 }
 
+
+body {
+    background-color: rgba(21, 21, 21, 1);
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  #cart-content {
+    text-align: center;
+    background-color: rgba(21, 21, 21, 1);
+    padding: 40px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  h3 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+  }
+
+  .btn-container {
+    margin-top: 30px;
+  }
+
+  .btn1 {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: rgba(21, 21, 21, 1);
+    color: #fff;
+    font-size: 16px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn1:hover {
+    background-color: #0056b3;
+  }
+  
+
+
+  @import url(http://fonts.googleapis.com/css?family=Calibri:400,300,700);
+
+body {
+    background-color: rgba(21, 21, 21, 1);
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  .container-fluid {
+    margin-top: 100px;
+  }
+
+  #cart-content {
+    display: flex;
+    justify-content: center;
+  }
+
+  .card-body.cart {
+    text-align: center;
+  }
+
+  .empty-cart-cls {
+    margin-top: 50px;
+    color: #fff;
+  }
+
+  .empty-cart-cls h3,
+  .empty-cart-cls h4 {
+    color: #fff;
+  }
+
+  .btn.btn-primary.cart-btn-transform {
+    background-color: #007bff;
+    color: #fff;
+    font-size: 16px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn.btn-primary.cart-btn-transform:hover {
+    background-color: #0056b3;
+  }
 </style>
 
-<section class="h-100 gradient-custom">
+
+<body>
+  
+ <div class="container-fluid mt-100">
+    <div class="row" id="cart-content">
+      <div class="col-md-12">
+        <div class="card-body cart">
+          <div class="col-sm-12 empty-cart-cls text-center">
+            <img src="https://i.imgur.com/dCdflKN.png" width="130" height="130" class="img-fluid mb-4 mr-3">
+            <h3><strong>Your Cart is Empty</strong></h3>
+            <h4>Add something to make me happy :)</h4>
+            <a href="/all-products" class="btn btn-primary cart-btn-transform m-3" data-abc="true">Continue Shopping</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+{{else}}
+<section class="h-100 gradient-custom" style="background-color: rgba(21, 21, 21, 1);">
   <div class="container py-5">
     
     <div class="row d-flex justify-content-center my-4">
       <div class="col-md-8">
         <div class="card mb-4">
-          <div class="card-header py-3">
-            <h5 class="mb-0"><strong> Your Cart</strong></h5>
+          <div class="card-header py-3" style="background-color: rgb(52 51 51)">
+            <h5 class="mb-0" style="color: white;"><strong> Your Cart</strong></h5>
           </div>
           <div class="card-body">
             {{#each products}}
@@ -60,16 +174,16 @@ background: linear-gradient(to right, rgba(21, 21, 21, 1), rgb(11, 11, 11))
                  
                   <th scope="col">Quantity</th>
                 <td >
-                  <button class="cart-item-count mr-3" onclick="changeQuantity('{{this._id}}','{{this.product._id}}',-1)">-</button>
+                  <button class="cart-item-count mr-3" onclick="changeQuantity('{{this._id}}','{{this.product._id}}','{{../user}}',-1)">-</button>
                   <span id="{{this.product._id}}">{{this.quantity}}</span> 
-                  <button class="cart-item-count ml-3" onclick="changeQuantity('{{this._id}}','{{this.product._id}}',1)">+</button>
+                  <button class="cart-item-count ml-3" onclick="changeQuantity('{{this._id}}','{{this.product._id}}','{{../user}}',1)">+</button>
                  
                 </div>
                 <!-- Quantity -->
                  
                 <!-- Price -->
                  <p class="text-start text-md-center">
-                  <strong>{{this.product.price}}</strong>
+                 <span></span><strong>₹{{this.product.price}}</strong>
                 </p>
                 <!-- Price -->
               </div>
@@ -107,8 +221,8 @@ background: linear-gradient(to right, rgba(21, 21, 21, 1), rgb(11, 11, 11))
      
       <div class="col-md-4">
         <div class="card mb-4">
-          <div class="card-header py-3">
-            <h5 class="mb-0">Summary</h5>
+          <div class="card-header py-3" style="background-color: rgb(52 51 51)">
+            <h5 class="mb-0" style="color: white;">Summary</h5>
           </div>
           <div class="card-body">
             <ul class="list-group list-group-flush">
@@ -125,13 +239,13 @@ background: linear-gradient(to right, rgba(21, 21, 21, 1), rgb(11, 11, 11))
                     <p class="mb-0">(including GST)</p>
                   </strong>
                 </div>
-                <span><strong>₹{{total}}</strong></span>
+              <strong >₹<span id="total">{{total}}</span></strong>
               </li>
             </ul>
             <a href="/delivery-address" type="button" class="btn btn-warning btn-lg btn-block">Go to checkout</a>
             {{!-- <button type="button" class="btn btn-primary btn-lg btn-block">
               Go to checkout
-            </button> --}}
+            </button> --}}           
           </div>
         </div>
       </div>
@@ -139,15 +253,16 @@ background: linear-gradient(to right, rgba(21, 21, 21, 1), rgb(11, 11, 11))
   </div>
 </section>
 
-
+{{/if}}
 <script>
 
-function changeQuantity(cartId,proId,count){
+function changeQuantity(cartId,proId,user,count){
   let quantity = parseInt(document.getElementById(proId).innerHTML)
   count= parseInt(count)
   $.ajax({
     url:'/change-product-quantity',
     data:{ 
+          user:user, 
           cart:cartId,
           product:proId,
           count:count, 
@@ -160,6 +275,7 @@ function changeQuantity(cartId,proId,count){
         location.reload()
       }else{
         document.getElementById(proId).innerHTML=quantity+count
+        document.getElementById('total').innerHTML=response.total
       }
     }
   })

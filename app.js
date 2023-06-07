@@ -11,6 +11,8 @@ var app = express();
 var fileUpload= require('express-fileupload')
 var db= require('./config/connection');
 var session = require('express-session')
+var handlebars = require('handlebars');
+
 const { log } = require('console');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -50,4 +52,23 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+
+handlebars.registerHelper('eq', function (value1, value2) {
+  return value1 === value2;
+});
+
+handlebars.registerHelper('gt', function (value1, value2) {
+  return value1 > value2;
+});
+
+handlebars.registerHelper('lt', function (value1, value2) {
+  return value1 < value2;
+});
+handlebars.registerHelper('add', function (value1, value2) {
+  return value1 + value2;
+});
+
+handlebars.registerHelper('nteq', function (value1, value2) {
+  return value1 !== value2;
+});
 module.exports = app;

@@ -55,5 +55,18 @@ module.exports={
                 resolve()
             })
         })
+    },
+
+    AllProductsPagination:(val)=>{
+        return new Promise(async(resolve,reject)=>{
+          console.log(val)
+          let products = await db.get()
+          .collection(collection.PRODUCT_COLLECTION)
+          .find()
+          .skip((val - 1)*5)
+          .limit(5)
+          .toArray()
+          resolve(products)
+        })
+      }
     }
-}

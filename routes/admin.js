@@ -3,8 +3,9 @@ var router = express.Router();
 var productHelpers= require('../helpers/product-helpers')
 const adminHelpers = require('../helpers/admin-helpers')
 var categoryHelpers = require('../helpers/category-helpers')
-// const multer = require('multer');
-// const upload = multer({dest:"upload"})
+const multer = require("multer");
+const fs = require('fs')
+const { adminLoginGet, adminLoginPost, AdminLogoutGet, }= require('../controller/admin-controller')
 
 const verifyLogin=(req,res,next)=>{
   if(req.session.admin && req.session.admin.loggedIn){
@@ -15,13 +16,14 @@ const verifyLogin=(req,res,next)=>{
 }
 /* GET users listing. */
 router.get('/',verifyLogin, function(req, res, next) {
-  productHelpers.getAllProducts().then((products)=>{
+  let val =Number(req.query.p)
+  productHelpers.AllProductsPagination(val).then((products)=>{
     res.render('admin/view-products',{admin:true,products})
   })
 });
 
 
-// ********* GET add-products lilsting **************//
+// ********* GET add-products listing **************//
 router.get('/add-product',verifyLogin,async function(req,res){
   let admin= req.session.admin
   let category= await categoryHelpers.getAllCategory();
@@ -48,6 +50,7 @@ router.post('/add-product', (req, res) => {
     });
   });
 });
+
 
 
 // Delete Product get method
@@ -87,58 +90,24 @@ router.post('/edit-product/:id', async (req, res) => {
 });
 
 
-// Admin Login  get method
-router.get("/adminLogin",(req,res)=>{
-  if(req.session.admin){
-    res.redirect('/admin')
-  }else{
-    res.render('admin/login', {'loginErr':req.session.adminloginErr})
-    req.session.adminloginErr= false
-  }
-})
+//*************  Admin Login  get method **********
+router.get("/adminLogin",adminLoginGet)
 
-// router.post('/adminLogin',(req, res)=>{
-//   adminHelpers.doLogin(req.body).then((response)=>{
-//    if(response.status){
-//      req.session.admin= response.admin
-//      req.session.admin.loggedIn= true
-//      res.render('admin/dashboard')
-//    }else{
-//      req.session.adminloginErr= "Invalid username or password"
-//      res.redirect('/admin/adminLogin' )
-//    }
-//   })
-// })
-router.post('/adminLogin', (req, res) => {
-  adminHelpers.doLogin(req.body)
-    .then((response) => {
-      if (response.status) {
-        req.session.admin = response.admin;
-        req.session.admin.loggedIn = true;
-        res.render('admin/dashboard');
-      } else {
-        req.session.adminloginErr = "Invalid username or password";
-        res.redirect('/admin/adminLogin');
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-      req.session.adminloginErr = "An error occurred while logging in";
-      res.redirect('/admin/adminLogin');
-    });
-});
+//******  ADmin login post method *********/
+
+router.post('/adminLogin',adminLoginPost);
 
 
 // Admin logout get method ************//
-router.get('/adminLogout', (req,res)=>{
-  // req.session.admin = null
-  req.session.destroy();
-  res.redirect('/admin/adminLogin')
-})
+router.get('/adminLogout',AdminLogoutGet)
+
+
 
 router.get('/user-data',verifyLogin,async(req,res)=>{
+   let val =Number(req.query.p)
   let users = await adminHelpers.getAllUsers(req.session)
   res.render('admin/all-users', {admin:true, users})
+
 })
 
 // block and unblock user methods **************
@@ -175,6 +144,7 @@ router.get('/show-category/:id',verifyLogin,(req,res)=>{
 
 
 router.get('/view-category',verifyLogin, function(req, res, next) {
+  let val =Number(req.query.p)
   categoryHelpers.getAllCategory().then((category)=>{
     res.render('admin/view-category',{admin:true,category})
   })
@@ -185,22 +155,7 @@ router.get('/add-category',verifyLogin, function(req,res){
   req.session.catError=false;
 
 })
-// router.post('/add-category',(req,res)=>{
-//   console.log(req.body);
-//   console.log(req.files.Image);
 
-//   categoryHelpers.addCategory(req.body,(insertedId)=>{
-//     let image= req.files.Image;
-//     image.mv('./public/category-image/'+insertedId+'.jpg',(err)=>{
-//       if(!err){
-//         res.render("admin/add-category")
-//       }else{
-//         console.log(err);
-//       }
-//     })
-   
-//   });
-// })
 
 
 // Category management post methods **************
@@ -277,6 +232,22 @@ router.post('/edit-category/:id', async (req, res) => {
 });
 
 
+
+//*********view-orders */
+
+
+
+router.get('/view-orders',async(req,res)=>{
+  let orders = await adminHelpers.getAllUsersOrders()
+  res.render('admin/view-orders',{admin:true,orders})
+})
+
+router.get("/status-change", async (req, res) => {
+  let id = req.query.id;
+  let status = req.query.st
+  adminHelpers.cancelOrder(id,status);
+  res.redirect("/admin/view-orders");
+});
 
 module.exports = router;
 

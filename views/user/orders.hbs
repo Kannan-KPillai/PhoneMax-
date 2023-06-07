@@ -1,0 +1,143 @@
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: "Nunito Sans", "Helvetica Neue", sans-serif;
+      background-color: rgba(21, 21, 21, 1);
+    }
+
+    .container {
+      margin: 0 auto;
+      max-width: 800px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .order-history {
+      background-color: rgba(53, 53, 53, 1);
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+      width: 600px;
+      height: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    h1 {
+      color: #88B04B;
+      font-weight: 900;
+      font-size: 30px;
+      margin-bottom: 20px;
+      padding-top: 60px;
+    }
+
+    .order-history h2 {
+      color: white;
+      font-weight: bold;
+      margin-bottom: 10px;
+      padding-top: 20px;
+    }
+
+    .order-history .order {
+      margin-bottom: 20px;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 10px;
+    }
+
+    .order-history .order:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .order-history .order .order-info {
+      display: flex;
+      align-items: center;
+    }
+
+    .order-history .order .order-info .order-number {
+      color: #ffffff;
+      font-size: 16px;
+      margin-right: 10px;
+    }
+
+    .order-history .order .order-info .order-date {
+      color: #ffffff;
+      font-size: 16px;
+    }
+
+    .order-history .order .order-details {
+      margin-top: 10px;
+      color: #ffffff;
+      font-size: 14px;
+    }
+
+    .order-history .order .order-details ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .order-history .order .order-details ul li {
+      margin-bottom: 5px;
+    }
+
+    .order-history .order .order-details ul li span {
+      font-weight: bold;
+    }
+
+    .order-history .order .product-details {
+      margin-top: 10px;
+      color: #ffffff;
+      font-size: 14px;
+    }
+
+    .order-history .order .product-details table {
+      width: 100%;
+    }
+
+    .order-history .order .product-details table th,
+    .order-history .order .product-details table td {
+      padding: 5px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .order-history .order .product-details table th {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Order History</h1>
+    {{#each orders}}
+    <div class="order-history">
+      <div class="order">
+        <div class="order-info">
+          <span class="order-number">Order id: {{this._id}}</span>
+        </div>
+        <div class="order-details">
+          <li>Address: <span>{{this.deliveryDetails.address}}</span></li>
+          <li>Pincode: <span>{{this.deliveryDetails.pincode}}</span></li>
+          <li>Mobile No: <span>{{this.deliveryDetails.mobile}}</span></li>
+          <li>Payment Method: <span>{{this.paymentMethod}}</span></li>
+          <li>Status: <span>{{this.status}}</span></li>
+          <li><strong>Total: <span style="font-size: 20px;">₹{{this.totalAmount}}</strong></span></li>
+        </div>
+       
+      </div>
+    </div>
+    {{/each}}
+  </div>
+</body>
+</html>

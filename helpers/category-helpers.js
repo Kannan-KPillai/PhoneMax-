@@ -59,19 +59,55 @@ module.exports={
             })
         })
     },
-    updateCategory:(catId, catDetails)=>{
-        return new Promise((resolve,reject)=>{
-            db.get().collection(collection.CATEGORY_COLLECTION)
-            .updateOne({_id:objectId(catId)}, {
+    // updateCategory:(catId, catDetails)=>{
+    //     return new Promise((resolve,reject)=>{
+    //         db.get().collection(collection.CATEGORY_COLLECTION)
+    //         .updateOne({_id:objectId(catId)}, {
+    //             $set:{
+    //                 name:catDetails.name,
+    //                 description:catDetails.description,
+    //                 price:catDetails.price,
+    //                 category:catDetails.category
+    //             }
+    //         }).then((response)=>{
+    //             resolve()
+    //         })
+    //     })
+    // },
+    updateCategory:(catId,catDetails)=>{
+        return new Promise(async(resolve,reject)=>{
+      let catExist= await db.get().collection(collection.CATEGORY_COLLECTION).findOne({Category:catDetails.Category})
+            if(!catExist){
+                db.get().collection(collection.CATEGORY_COLLECTION).updateOne({_id:objectId(catId)},{
                 $set:{
+                    category:catDetails.Category,
                     name:catDetails.name,
                     description:catDetails.description,
                     price:catDetails.price,
-                    category:catDetails.category
+                   
                 }
             }).then((response)=>{
-                resolve()
+                resolve(response)
             })
+        }else{
+            let response=false;
+            resolve(response)
+        }
+                
+            
         })
-    }
+    },
+
+AllProductsPagination:(val)=>{
+    return new Promise(async(resolve,reject)=>{
+      console.log(val)
+      let products = await db.get()
+      .collection(collection.PRODUCT_COLLECTION)
+      .find()
+      .skip((val - 1)*5)
+      .limit(5)
+      .toArray()
+      resolve(products)
+    })
+  }
 }

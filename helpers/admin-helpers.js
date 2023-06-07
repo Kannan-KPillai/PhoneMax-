@@ -62,4 +62,58 @@ blockUser:(userId)=>{
     })
   },
 
+  AllProductsPagination:(val)=>{
+    return new Promise(async(resolve,reject)=>{
+      console.log(val)
+      let products = await db.get()
+      .collection(collection.PRODUCT_COLLECTION)
+      .find()
+      .skip((val - 1)*5)
+      .limit(5)
+      .toArray()
+      resolve(products)
+    })
+  },
+
+  searchAllUsers:(search)=>{
+    return new Promise(async (resolve,reject)=>{
+      let users = await db.get().collection(collection.USER_COLLECTION)
+      .find(   {$or: [
+        { username: { $regex: new RegExp('^' + search + '.*', 'i') } },
+        { email: { $regex: new RegExp('^' + search + '.*', 'i') } },
+        { number: { $regex: new RegExp('^' + search + '.*', 'i') } },
+        // Add more fields as needed
+      ]})
+      .toArray()
+      if(users.length){
+        resolve(users)
+        
+      } else {
+        let sErr = "Sorry! No such item found" 
+        reject(sErr)
+      }
+     
+    })
+  },
+
+  getAllUsersOrders:()=>{
+        return new Promise(async(resolve,reject)=>{
+            let usersOrders=await db.get().collection(collection.ORDER_COLLECTION).find({}).toArray()
+            resolve(usersOrders)
+        })
+      },
+
+    delivered:async (orderId)=>{
+        await new Promise(async (resolve, reject) => {
+          await db.get().collection(collection.ORDER_COLLECTION).updateOne({ _id: ObjectId(orderId) }, { $set: { 'status': 'Delivered' } })
+        })
+        resolve()
+      },
+
+      cancelOrder:(orderId,status)=>{
+        new Promise(async (resolve, reject) => {
+         await db.get().collection(collection.ORDER_COLLECTION).updateOne({ _id: objectId(orderId) }, { $set: { 'status': status } })
+         resolve()
+       })
+    }
 }

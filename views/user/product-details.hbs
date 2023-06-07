@@ -129,7 +129,7 @@
           <span class="text-uppercase text-muted brand"></span>
           <h5 class="text-uppercase"><strong>{{product.name}}</strong></h5>
           <div class="price d-flex flex-row align-items-center">
-            <span class="act-price"><strong>{{product.price}}</strong></span>
+            <span class="act-price"><strong>₹{{product.price}}</strong></span>
             <div class="ml-2">
               <small class="dis-price"></small>
               <span>17% OFF</span>
@@ -140,17 +140,21 @@
         <div class="sizes mt-5">
         </div>
         <div class="cart mt-4 align-items-center">
-          {{!-- <button  ">Add to cart</button> --}}
-         {{!-- <a href="/add-to-cart/{{product._id}}" class="btn btn-danger text-uppercase">Add to cart</a> --}}
-         <button onclick="addToCart('{{this._id}}')" class="btn btn-outline-primary btn-sm mt-2">Add to Cart</button>
+         <button onclick="addToCart('{{product._id}}')" class="btn btn-outline-primary btn-sm mt-2">Add to Cart</button>
+
          <i class="fa fa-heart text-muted"></i>
           <i class="fa fa-share-alt text-muted"></i>
         </div>
       </div>
-    </div>
+    </div> 
   </div>
-  </div>
+
+
+
+  
 </body>
+
+
 <script>
   const lens = document.querySelector(".lens");
   const first = document.querySelector(".first");

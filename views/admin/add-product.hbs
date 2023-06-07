@@ -14,6 +14,8 @@
     <div class="container mt-4">
     <div class="row">
 
+
+
         <div class="col-md-6 ">
             <h2 class="text-center">Add Product</h2>
             <form action="/admin/add-product" method="POST" enctype="multipart/form-data">
@@ -22,12 +24,12 @@
                 <input type="text" name="name" class="form-control"> 
 
                 <label for="category">Category</label>
-          <select name="category" class="form-control" required>
-            <option >Select a category</option>
-            {{#each category}}
-            <option >{{this.category}}</option>
-            {{/each}}
-          </select> 
+                    <select name="category" class="form-control" required>
+                        <option >Select a category</option>
+                        {{#each category}}
+                        <option >{{this.category}}</option>
+                        {{/each}}
+                    </select> 
 
                 <label for="">Price</label>
                 <input type="text" name="price" class="form-control"> 
@@ -35,15 +37,77 @@
                 <label for="">Description</label>
                 <input type="text" name="description" class="form-control"> 
 
-             <label for="">Image</label>
-                <input type="file" name="Image" class="form-control">
-                {{!-- <label for="photo" class="form-label">Image:</label>
-                    <input type="file" name="Image" id="photos" accept="image/*" multiple> --}}
-                <button type="submit" class="btn btn-success mt-4">Submit</button>
-            </form>
+             {{!-- <label for="">Image</label>
+                <input type="file" name="Image" class="form-control">--}}
+                <label for="">Image</label>
+             
+{{!-- <div>
+    <input type="file" id="imageInput" name="Image" class="form-control"  class="form-control-file" accept="image/*" multiple required>
+    <img id="imagePreview" src="#" alt="Image Preview" style="max-width: 100%; height: auto; display: none;">
+    <input type="hidden" id="croppedImage" name="croppedImage">
+    <button type="submit" class="btn btn-success mt-4">Submit</button>
+     --}}
 
+    
+<div>
+  <input type="file" id="imageInput" name="Image" class="form-control-file" accept="image/*" required>
+  <img id="imagePreview" src="#" alt="Image Preview" style="max-width: 100%; height: auto; display: none;">
+  <input type="hidden" id="croppedImage" name="croppedImage">
+  <button type="submit" class="btn btn-success mt-4">Submit</button>
+</div>
+
+     </form> 
+
+</div>
         </div>
-
     </div>
-   </div>
+   </div>     
+   
+
+
+  
 </section>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const imageInput = document.getElementById('imageInput');
+    const imagePreview = document.getElementById('imagePreview');
+    const croppedImageInput = document.getElementById('croppedImage');
+    let cropper;
+
+    imageInput.addEventListener('change', function(event) {
+      const file = event.target.files[0];
+
+      if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+
+        reader.onload = function() {
+          imagePreview.src = reader.result;
+
+          if (cropper) {
+            cropper.destroy();
+          }
+
+          cropper = new Cropper(imagePreview, {
+            aspectRatio: 1,
+            viewMode: 2,
+            autoCropArea: 1,
+            ready: function() {
+              const canvas = cropper.getCroppedCanvas({
+                width: 200, // Set desired cropped image width
+                height: 200, // Set desired cropped image height
+              });
+              const croppedImageDataURL = canvas.toDataURL('image/jpeg');
+
+              croppedImageInput.value = croppedImageDataURL;
+            },
+          });
+        };
+
+        reader.readAsDataURL(file);
+      }
+    });
+  });
+</script>
+
