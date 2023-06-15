@@ -1,7 +1,25 @@
 
- <section style="background-color: rgba(21, 21, 21, 1);">
-  <div class="container py-5">
-    <div class="row justify-content-center mb-3">
+<section style="background-color: rgba(21, 21, 21, 1);">
+
+  <div class="container py-3">
+    
+    {{!-- search bar  start--}}
+<div class="d-flex justify-content-end mt-3" style="padding-left: 50px;">
+    <form class="form-inline" action="/all-products" method="post">
+        <input style="width: 15rem" class="form-control mr-sm-2 d-inline" type="search" name="search" placeholder="Search by name, category" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0 d-inline" type="submit">Search</button>
+    </form>
+</div>
+       <div class="col">
+        <button id="filterButton" class="btn btn-primary">Filter</button>
+        <div id="toggleButtons" class="btn-group" style="display: none;">
+          <button id="lowToHighButton" class="btn btn-outline-dark">Price: Low to High</button>
+          <button id="highToLowButton" class="btn btn-outline-dark">Price: High to Low</button>
+        </div>
+      </div>
+{{!-- search bar end --}}
+
+    <div class="row justify-content-center mb-3" style="padding-top: 3rem;">
         {{#each products}}
       <div class="col-md-12 col-xl-10">
         <div class="card shadow-0 border rounded-3" >
@@ -69,4 +87,67 @@
 </nav>
    </section>  
 
-  
+ 
+<script>
+  const filterButton = document.getElementById('filterButton');
+  const toggleButtons = document.getElementById('toggleButtons');
+  const lowToHighButton = document.getElementById('lowToHighButton');
+  const highToLowButton = document.getElementById('highToLowButton');
+  const productsContainer = document.querySelector('.row.justify-content-center');
+
+  let productsData = [];
+  let filteredData = [];
+
+  filterButton.addEventListener('click', function () {
+    toggleButtons.style.display = (toggleButtons.style.display === 'none') ? 'block' : 'none';
+  });
+
+  lowToHighButton.addEventListener('click', function () {
+    sortProducts('lowToHigh');
+  });
+
+  highToLowButton.addEventListener('click', function () {
+    sortProducts('highToLow');
+  });
+
+  // Store the original data in productsData variable
+  const productCards = document.getElementsByClassName('card');
+  for (let i = 0; i < productCards.length; i++) {
+    const card = productCards[i];
+    const priceElement = card.querySelector('.card-price');
+    const price = parseFloat(priceElement.innerText.replace('₹', ''));
+    productsData.push({
+      element: card,
+      price: price
+    });
+  }
+
+  function sortProducts(sortOrder) {
+    // Clone the productsData array to avoid modifying the original data
+    filteredData = productsData.slice();
+
+    // Sort the products data based on price
+    filteredData.sort((a, b) => {
+      if (sortOrder === 'lowToHigh') {
+        return a.price - b.price;
+      } else if (sortOrder === 'highToLow') {
+        return b.price - a.price;
+      }
+    });
+
+    // Update the card display with the sorted data
+    updateCards(filteredData);
+  }
+
+  function updateCards(data) {
+    // Remove all existing cards from the container
+    while (productsContainer.firstChild) {
+      productsContainer.firstChild.remove();
+    }
+
+    // Append the sorted cards to the container
+    data.forEach(product => {
+      productsContainer.appendChild(product.element);
+    });
+  }
+</script>

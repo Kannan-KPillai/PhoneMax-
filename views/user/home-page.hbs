@@ -1,4 +1,60 @@
+<style>
+  .brand-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
 
+  .brand-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .brand-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-color: rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .brand-card:hover .brand-overlay {
+    opacity: 1;
+  }
+
+  .brand-info {
+    text-align: center;
+  }
+
+  .brand-info h5 {
+    color: #fff;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .brand-info p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    margin-bottom: 0;
+  }
+  .carousel-img {
+    height: 400px;
+    width: 100%;
+    object-fit: cover;
+  }
+</style>
+
+
+
+          {{!-- banner 1 --}}
 
 <div style="height: 60px; background-color: rgba(21, 21, 21, 1); display: flex; align-items: center; justify-content: center;">
     <h4 style="color: white;">Buy Your Favorite Smart Phone from PhoneMax</h4>
@@ -11,13 +67,13 @@ background-repeat:no-repeat; background-size:cover; height: 400px; width:100%">
 </div>
 
 
-
+           {{!-- Latest products --}}
 
       <section style="background-color: rgba(53, 53, 53, 1)">
   <div class="text-center container py-3">
     <h4 class="mt-4 mb-3" style="color: white;"><strong>Latest Mobile Phones For You</strong></h4>
 
-    <div class="row">
+     <div class="row">
       {{#each products}}
       <div class="col-lg-3 col-md-6 mb-3">
         <div class="card" style="background-color: rgba(53, 53, 53, 1); height: 100%;">
@@ -44,36 +100,185 @@ background-repeat:no-repeat; background-size:cover; height: 400px; width:100%">
       {{/each}}
     </div>
   </div>
+</section> 
+
+
+
+
+  {{!-- smart phone categories --}}
+
+
+<div style="background-color: rgba(21, 21, 21, 1); padding-top:50px">
+<a class="ripple" href="#!" style="padding-right:30px;  padding-left:200px ">
+  <img
+    alt="example"
+    class="img-fluid rounded"
+    src="https://d2d22nphq0yz8t.cloudfront.net/88e6cc4b-eaa1-4053-af65-563d88ba8b26/https://media.croma.com/image/upload/v1684242611/Croma%20Assets/CMS/CAtegory/Mobile%20phone%20-%20C10/16-05-23/Desktop/Choose%20Your%20Type/3split_PCP_righttype_iPhone_15May2023_dfaihn.png/mxw_2048,f_auto"
+  />
+  <a class="ripple" href="#!">
+  <img
+    alt="example"
+    class="img-fluid rounded"
+    src="https://d2d22nphq0yz8t.cloudfront.net/88e6cc4b-eaa1-4053-af65-563d88ba8b26/https://media.croma.com/image/upload/v1684242611/Croma%20Assets/CMS/CAtegory/Mobile%20phone%20-%20C10/16-05-23/Desktop/Choose%20Your%20Type/3split_PCP_righttype_Android_15May2023_m5mclk.png/mxw_2048,f_auto"
+  />
+  
+</a>
+</a>
+</div>
+
+
+
+
+         {{!-- different brands --}}
+<section style="background-color: rgba(21, 21, 21, 1);">
+  <div class="container py-5">
+    <h4 class="text-center mb-5" style="color: white;"><strong>Trusted Brands</strong></h4>
+
+    <div class="row">
+      <div class="col-lg-4 col-md-12 mb-4">
+        <div class="brand-card">
+          <img src="https://d2d22nphq0yz8t.cloudfront.net/88e6cc4b-eaa1-4053-af65-563d88ba8b26/https://media.croma.com/image/upload/v1666000241/Croma%20Assets/CMS/CAtegory/Mobile%20phone%20-%20C10/NEW%20PCP%20DESIGN%20-%20OCT/Updated/4spli_PCP_shopbybrand_oneplus_27sep2022_bdlvsd.png/mxw_2048,f_auto"
+            class="w-100" />
+          <a href="/all-products" class="brand-overlay">
+            <div class="mask"></div>
+            <div class="brand-info">
+              <h5>OnePlus</h5>
+              <p>Explore OnePlus products</p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="brand-card">
+          <img src="https://d2d22nphq0yz8t.cloudfront.net/88e6cc4b-eaa1-4053-af65-563d88ba8b26/https://media.croma.com/image/upload/v1666000242/Croma%20Assets/CMS/CAtegory/Mobile%20phone%20-%20C10/NEW%20PCP%20DESIGN%20-%20OCT/Updated/4spli_PCP_shopbybrand_vivo_27sep2022_knaawj.png/mxw_2048,f_auto"
+            class="w-100" />
+          <a href="/all-products" class="brand-overlay">
+            <div class="mask"></div>
+            <div class="brand-info">
+              <h5>Vivo</h5>
+              <p>Explore Vivo products</p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="brand-card">
+          <img src="https://d2d22nphq0yz8t.cloudfront.net/88e6cc4b-eaa1-4053-af65-563d88ba8b26/https://media.croma.com/image/upload/v1667542217/Croma%20Assets/CMS/CAtegory/Mobile%20phone%20-%20C10/4spli_PCP_shopbybrand_realme_3nov2022_u4p8mv.png/mxw_2048,f_auto"
+            class="w-100" />
+          <a href="/all-products" class="brand-overlay">
+            <div class="mask"></div>
+            <div class="brand-info">
+              <h5>Realme</h5> 
+              <p>Explore Realme products</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-4 col-md-12 mb-4">
+        <div class="brand-card">
+          <img src="https://d2d22nphq0yz8t.cloudfront.net/88e6cc4b-eaa1-4053-af65-563d88ba8b26/https://media.croma.com/image/upload/v1666000241/Croma%20Assets/CMS/CAtegory/Mobile%20phone%20-%20C10/NEW%20PCP%20DESIGN%20-%20OCT/Updated/4spli_PCP_shopbybrand_oppo_27sep2022_aga789.png/mxw_2048,f_auto"
+            class="w-100" />
+          <a href="/all-products" class="brand-overlay">
+            <div class="mask"></div>
+            <div class="brand-info">
+              <h5>Oppo</h5>
+              <p>Explore Oppo products</p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="brand-card">
+          <img src="https://d2d22nphq0yz8t.cloudfront.net/88e6cc4b-eaa1-4053-af65-563d88ba8b26/https://media.croma.com/image/upload/v1666000242/Croma%20Assets/CMS/CAtegory/Mobile%20phone%20-%20C10/NEW%20PCP%20DESIGN%20-%20OCT/Updated/4spli_PCP_shopbybrand_mi_27sep2022_tpwcdb.png/mxw_2048,f_auto"
+            class="w-100" />
+          <a href="/all-products" class="brand-overlay">
+            <div class="mask"></div>
+            <div class="brand-info">
+              <h5>Xiaomi</h5>
+              <p>Explore Xiaomi products</p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="brand-card">
+          <img src="https://d2d22nphq0yz8t.cloudfront.net/88e6cc4b-eaa1-4053-af65-563d88ba8b26/https://media.croma.com/image/upload/v1666000242/Croma%20Assets/CMS/CAtegory/Mobile%20phone%20-%20C10/NEW%20PCP%20DESIGN%20-%20OCT/Updated/4spli_PCP_shopbybrand_tecno_27sep2022_pi8az1.png/mxw_2048,f_auto"
+            class="w-100" />
+          <a href="/all-products" class="brand-overlay">
+            <div class="mask"></div>
+            <div class="brand-info">
+              <h5>Tecno</h5>
+              <p>Explore Tecno products</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
-
-
-           
-    <section  style="background-color: rgba(21, 21, 21, 1)">
-        <div class="container">
-            <div class="row">
+{{!-- 
+  <section style="background-color: rgba(21, 21, 21, 1)">
+    <div class="container">
+        <div class="card card-custom" style="width: 30rem;" "background-color: rgba(21, 21, 21, 1)">
+            <div class="row" style="background-color: rgba(21, 21, 21, 1)">
                 {{#each category}}
                 {{#if isHide}}
-
                 {{else}}
-                <div class="col-md-3 p-3">
-                    <div class="card" style="width: 15rem;">
+                <div class=" col-md-8 mb-4">
+                    <div class="hover-overlay ripple">
+                        <img src="/category-image/{{this._id}}.jpg" alt="..." class="img-fluid" />
                         <a href="/categorydetails/{{this._id}}">
-                        <img src="/category-image/{{this._id}}.jpg" class="card-img-top" alt="..."></a>
-                        <div class="card-body">
-                            <td>{{this.category}}</td>
-                           <td>{{this.brand}}</td>  
-                        </div>
+                            <div class="mask" style="background-color: rgba(57, 192, 237, 0.2);"></div>
+                        </a>
                     </div>
                 </div>
                 {{/if}}
                 {{/each}}
             </div>
         </div>
-    </section>
+    </div>
+</section> --}}
+
+<style>
+    .col-md-3 {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+</style>
+
    
 
-    <div class="bg-image d-flex justify-content-center align-items-center" 
-style="background-image: url(https://i.pinimg.com/originals/ca/e7/2c/cae72ce86998abcadd5051acd91a696b.jpg);
-background-repeat:no-repeat; background-size:cover; height: 400px; width:100%">
+      {{!-- banner 2 --}}
+
+<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+  <ol class="carousel-indicators">
+    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+    <!-- Add additional indicators for each banner -->
+    {{#each banners}}
+    <li data-target="#carouselExampleIndicators" data-slide-to="{{@index}}"></li>
+    {{/each}}
+  </ol>
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img class="d-block w-100 carousel-img" src="https://www.thechennaimobiles.com/image/cache/catalog/HOME%20BANNER/f23-1920x630.png" alt="First slide">
+    </div>
+    <!-- Add additional slide items for each banner -->
+    {{#each banners}}
+    <div class="carousel-item">
+      <div class="d-flex justify-content-center align-items-center">
+        <img class="carousel-img" src="/banner-image/{{this._id}}.jpg" alt="Banner Image">
+      </div>
+    </div>
+    {{/each}}
+  </div>
 </div>

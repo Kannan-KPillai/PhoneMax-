@@ -139,9 +139,8 @@
         <p class="about">{{product.description}}</p>
         <div class="sizes mt-5">
         </div>
-        <div class="cart mt-4 align-items-center">
-         <button onclick="addToCart('{{product._id}}')" class="btn btn-outline-primary btn-sm mt-2">Add to Cart</button>
-
+        <div class="mt-4 align-items-center">
+         <button onclick="addToCart('{{product._id}}')" class="btn btn-primary btn-sm mt-2">Add to Cart</button>
          <i class="fa fa-heart text-muted"></i>
           <i class="fa fa-share-alt text-muted"></i>
         </div>
@@ -173,11 +172,6 @@
   first.addEventListener("mouseout", () => {
     second.style.display = "none";
   });
-
-
-
- 
-  
 
 
 

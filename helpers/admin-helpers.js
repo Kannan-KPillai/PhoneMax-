@@ -115,5 +115,194 @@ blockUser:(userId)=>{
          await db.get().collection(collection.ORDER_COLLECTION).updateOne({ _id: objectId(orderId) }, { $set: { 'status': status } })
          resolve()
        })
-    }
+    },
+
+  addBanner: (banner) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let data = await db.get().collection(collection.BANNER_COLLECTION).insertOne(banner);
+        resolve(data.insertedId);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
+
+    getBanners: () => {
+      return new Promise(async (resolve, reject) => {
+        try {
+          let banners = await db.get().collection(collection.BANNER_COLLECTION).find().toArray();
+          resolve(banners);
+        } catch (error) {
+          reject(error);
+        }
+      });
+    },
+  
+    // deleteBanner:()=>{
+    //   return new Promise((resolve,reject)=>{
+    //     let remove = db.get().collection(collection.BANNER_COLLECTION).deleteOne()
+    //     resolve(remove)
+    //   })
+    // },
+
+    deleteBanner: (bannerId) => {
+      return new Promise((resolve, reject) => {
+        db.get()
+          .collection(collection.BANNER_COLLECTION)
+          .deleteOne({ _id: ObjectId(bannerId) })
+          .then((response) => {
+            resolve(response);
+          });
+      })
+    },
+    
+    getOrderProducts:(orderId)=>{
+      return new Promise(async(resolve,reject)=>{
+        let orderItems = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+          {
+            $unwind:'$products'
+          },{
+            $project:{
+              item:'products.item',
+              quantity:'$products.quantity'
+            }  
+          },{
+            $lookup:{
+              from:collection.PRODUCT_COLLECTION,
+              localField:'item',
+              foreignField:'_id',
+              as:'product'
+            }
+          },
+          {
+            $project:{
+              item:1,
+              name:1,
+              quantity:1,
+              product:{$arrayElemAt:['$product',0]}
+            }
+          }
+        ]).toArray()
+        resolve(orderItems)
+      })
+    },
+
+    getAllLatestUsers: (user) => {
+      return new Promise(async (resolve, reject) => {
+        let users = await db
+          .get()
+          .collection(collection.USER_COLLECTION)
+          .find({})
+          .sort({ createdAt: -1 }) 
+          .limit(6)
+          .toArray();
+        resolve(users);
+      });
+    },
+    
+    getAllLatestOrders: () => {
+      return new Promise(async (resolve, reject) => {
+        let usersOrders = await db
+          .get()
+          .collection(collection.ORDER_COLLECTION)
+          .find({})
+          .sort({ createdAt: -1 }) 
+          .limit(6) 
+          .toArray();
+        resolve(usersOrders);
+      });
+    },
+
+    totalUser:()=>{
+      return new Promise(async(resolve,reject)=>{
+        db.get().collection(collection.USER_COLLECTION).countDocuments({}, (err, count) => {
+          if (err) {
+            reject(err);
+          }
+          // Access the total count of products
+          resolve(count);
+        });
+        
+      })
+    },
+
+    totalProduct:()=>{
+      return new Promise(async(resolve,reject)=>{
+        db.get().collection(collection.PRODUCT_COLLECTION).countDocuments({}, (err, count) => {
+          if (err) {
+            reject(err);
+          }
+          // Access the total count of products
+          resolve(count);
+        });
+        
+      })
+    },
+
+    totalAmount:()=>{
+      return new Promise(async(resolve,reject)=>{
+        db.get().collection(collection.ORDER_COLLECTION).aggregate([
+          {
+            $group: {
+              _id: null,
+              totalAmount: { $sum: "$totalAmount" },
+              totalOrders: { $sum: 1 }
+            }
+          }
+        ]).toArray((err, result) => {
+          if (err) {
+            reject(err);
+          }
+          // Access the total amount and total orders from the result
+          const totalAmount = result[0].totalAmount;
+          const totalOrders = result[0].totalOrders;
+          resolve({ totalAmount, totalOrders });
+        });
+        
+    })
+  },
+
+  paymentMethodCount: () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const codCount = await db
+          .get()
+          .collection(collection.ORDER_COLLECTION)
+          .countDocuments({ paymentMethod: "COD" });
+  
+        const onlineCount = await db
+          .get()
+          .collection(collection.ORDER_COLLECTION)
+          .countDocuments({ paymentMethod: "ONLINE" });
+  
+        resolve({ codCount, onlineCount });
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
+  
+  getSellingProductInEachMonth: () => {
+    return new Promise(async (resolve, reject) => {
+      await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+        {
+          $group: {
+            _id: { $month: { $toDate: "$date" } },
+            totalAmount: { $sum: "$totalAmount" }
+          }
+        }
+      ]).toArray((err, result) => {
+        if (err) {
+          console.error(err);
+          reject(err);
+          return;
+        }
+  
+        const totalAmounts = result.map(item => item.totalAmount);
+        resolve(totalAmounts);
+      });
+    });
+  }
+
 }

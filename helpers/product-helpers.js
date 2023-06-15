@@ -68,5 +68,33 @@ module.exports={
           .toArray()
           resolve(products)
         })
-      }
+      },
+
+
+      searchProducts:(search)=>{
+        return new Promise(async (resolve,reject)=>{
+          let products = await db.get().collection(collection.PRODUCT_COLLECTION)
+          .find(   {$or: [
+            { category: { $regex: new RegExp('^' + search + '.*', 'i') } },
+            { name: { $regex: new RegExp('^' + search + '.*', 'i') } },
+            { price: { $regex: new RegExp('^' + search + '.*', 'i') } },
+            // Add more fields as needed
+          ]})
+          .toArray()
+          if(products.length){
+            resolve(products)
+            console.log(products)
+          } else {
+            let sErr = "No such item found" 
+            reject(sErr)
+          }
+         
+        })
+      },
+
+
+
+
+
+
     }

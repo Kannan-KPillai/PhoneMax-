@@ -1,53 +1,26 @@
 {{!-- 
-
 <section>
-    <div class="container" style="padding-top: 5px;">
-        <div class="row mt-4">
-            <a href="/admin/add-product" class="btn btn-success ml-auto">Add Product</a>
-        </div>
-        <table class="table mt-5" id="productsTable">
-  <thead>
-    <tr>
-    
-      <th scope="col">Title</th>
-      <th scope="col">Category</th>
-      <th scope="col">Description</th>
-      <th scope="col">Price</th>
-      <th>Image</th>
-      <th>Options</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#each products}}
-    <tr>
-      
-      <td>{{this.name}}</td>
-      <td>{{this.category}}</td>
-      <td>{{this.description}}</td>
-      <td>{{this.price}}</td>
-      <td><img style="width:50px;height:50px " src="/product-image/{{this._id}}.jpg" alt=""></td>
-      <td><a href="/admin/edit-product/{{this._id}}" class="btn btn-primary">Edit</a></td>
-      <td><a href="/admin/delete-product/{{this._id}}" class="btn btn-danger" onclick="return confirm('Are you want to delete {{this.name}}')">Delete</a></td>
-    </tr>
-  {{/each}}
-  </tbody>
-</table>
-    </div>
-</section>
-<script>
-  $(function(){
-    $('#productsTable').DataTable({
-        "dom": '<"top"i>rt<"bottom"flp><"clear">',
-    });
-  })
-</script>
- --}}
-
-<section>
-  <div class="container">
+    <div class="container">
     <div class="row mt-4">
-      <a href="/admin/add-product" class="btn btn-success ml-auto">Add Product</a>
+      <div class="col">
+        <button id="filterButton" class="btn btn-primary">Filter</button>
+        <div id="toggleButtons" class="btn-group" style="display: none;">
+          <button id="lowToHighButton" class="btn btn-outline-dark">Price: Low to High</button>
+          <button id="highToLowButton" class="btn btn-outline-dark">Price: High to Low</button>
+        </div>
+      </div>
+      <div class="col">
+        <a href="/admin/add-product" class="btn btn-success float-right">Add Product</a>
+      </div>
     </div>
+
+  <div class="d-flex justify-content-end mt-3" style="padding-left: 50px;">
+    <form class="form-inline" action="/admin" method="post">
+        <input style="width: 15rem" class="form-control mr-sm-2 d-inline" type="search" name="search" placeholder="Search by name, category" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0 d-inline" type="submit">Search</button>
+    </form>
+</div>
+
     <div class="table-responsive mt-5">
       <table class="table table-bordered table-hover" id="productsTable">
         <thead class="thead-dark">
@@ -69,8 +42,125 @@
             <td>{{this.price}}</td>
             <td><img style="width:50px;height:50px" src="/product-image/{{this._id}}.jpg" alt=""></td>
             <td>
-              <a href="/admin/edit-product/{{this._id}}" class="btn btn-primary btn-sm">Edit</a>
-              <a href="/admin/delete-product/{{this._id}}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete {{this.name}}')">Delete</a>
+             <a href="/admin/edit-product/{{this._id}}" class="btn btn-primary btn-sm btn-block">Edit</a>
+<a href="/admin/delete-product/{{this._id}}" class="btn btn-danger btn-sm btn-block" onclick="return confirm('Are you sure you want to delete {{this.name}}')">Delete</a>
+
+            </td>
+          </tr>
+          {{/each}}
+        </tbody>
+
+    
+      </table>
+    </div>
+
+
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+        <li class="page-item"><a class="page-link" href="/admin?p=1">1</a></li>
+        <li class="page-item"><a class="page-link" href="/admin?p=2">2</a></li>
+        <li class="page-item"><a class="page-link" href="/admin?p=3">3</a></li>
+      </ul>
+    </nav>
+  </div>
+</section>
+
+<style>
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding-bottom: 2rem;
+  }
+
+  .btn {
+    border-radius: 0;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+
+  .btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+  }
+
+  .table-responsive {
+    border: none;
+  }
+
+  .table {
+    font-size: 14px;
+  }
+
+  .table thead th {
+    font-weight: bold;
+    vertical-align: middle;
+    color: #fff;
+    background-color: #343a40;
+    border-color: #343a40;
+  }
+
+  .table tbody td {
+    vertical-align: middle;
+  }
+
+  .pagination {
+    justify-content: center;
+  }
+</style> --}}
+
+
+
+<section>
+  <div class="container">
+    <div class="row mt-4">
+      <div class="col">
+        <button id="filterButton" class="btn btn-primary">Filter</button>
+        <div id="toggleButtons" class="btn-group" style="display: none;">
+          <button id="lowToHighButton" class="btn btn-outline-dark">Price: Low to High</button>
+          <button id="highToLowButton" class="btn btn-outline-dark">Price: High to Low</button>
+        </div>
+      </div>
+      <div class="col">
+        <a href="/admin/add-product" class="btn btn-success float-right">Add Product</a>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end mt-3" style="padding-left: 50px;">
+      <form class="form-inline" action="/admin" method="post">
+        <input style="width: 15rem" class="form-control mr-sm-2 d-inline" type="search" name="search"
+          placeholder="Search by name, category" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0 d-inline" type="submit">Search</button>
+      </form>
+    </div>
+
+    <div id="productsTableContainer" class="table-responsive mt-5">
+      <table class="table table-bordered table-hover" id="productsTable">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Category</th>
+            <th scope="col">Description</th>
+            <th scope="col">Price</th>
+            <th scope="col">Image</th>
+            <th scope="col">Options</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each products}}
+          <tr>
+            <td>{{this.name}}</td>
+            <td>{{this.category}}</td>
+            <td>{{this.description}}</td>
+            <td>{{this.price}}</td>
+            <td><img style="width:50px;height:50px" src="/product-image/{{this._id}}.jpg" alt=""></td>
+            <td>
+              <a href="/admin/edit-product/{{this._id}}" class="btn btn-primary btn-sm btn-block">Edit</a>
+              <a href="/admin/delete-product/{{this._id}}"
+                class="btn btn-danger btn-sm btn-block"
+                onclick="return confirm('Are you sure you want to delete {{this.name}}')">Delete</a>
             </td>
           </tr>
           {{/each}}
@@ -90,7 +180,7 @@
 
 <style>
   .container {
-    max-width: 800px;
+    max-width: 1000px;
     margin: 0 auto;
     padding-bottom: 2rem;
   }
@@ -133,3 +223,86 @@
     justify-content: center;
   }
 </style>
+
+<script>
+  const filterButton = document.getElementById('filterButton');
+  const toggleButtons = document.getElementById('toggleButtons');
+  const lowToHighButton = document.getElementById('lowToHighButton');
+  const highToLowButton = document.getElementById('highToLowButton');
+  const productsTableContainer = document.getElementById('productsTableContainer');
+  let productsData = []; // Variable to store the original data
+
+  filterButton.addEventListener('click', function () {
+    toggleButtons.style.display = (toggleButtons.style.display === 'none') ? 'block' : 'none';
+  });
+
+  lowToHighButton.addEventListener('click', function () {
+    sortProducts('lowToHigh');
+  });
+
+  highToLowButton.addEventListener('click', function () {
+    sortProducts('highToLow');
+  });
+
+  // Store the original data in productsData variable
+  const productsTable = document.getElementById('productsTable');
+  const tableRows = productsTable.getElementsByTagName('tr');
+  for (let i = 1; i < tableRows.length; i++) {
+    const rowData = tableRows[i].getElementsByTagName('td');
+    productsData.push({
+      name: rowData[0].innerText,
+      category: rowData[1].innerText,
+      description: rowData[2].innerText,
+      price: parseFloat(rowData[3].innerText)
+    });
+  }
+
+  function sortProducts(sortOrder) {
+    // Sort the products data based on price
+    productsData.sort((a, b) => {
+      if (sortOrder === 'lowToHigh') {
+        return a.price - b.price;
+      } else if (sortOrder === 'highToLow') {
+        return b.price - a.price;
+      }
+    });
+
+    // Update the table with the sorted data
+    updateTable(productsData);
+  }
+
+  function updateTable(data) {
+    let tableHTML = '<table class="table table-bordered table-hover" id="productsTable">' +
+      '<thead class="thead-dark">' +
+      '<tr>' +
+      '<th scope="col">Title</th>' +
+      '<th scope="col">Category</th>' +
+      '<th scope="col">Description</th>' +
+      '<th scope="col">Price</th>' +
+      '<th scope="col">Image</th>' +
+      '<th scope="col">Options</th>' +
+      '</tr>' +
+      '</thead>' +
+      '<tbody>';
+
+    // Iterate over the data and populate the table rows
+    data.forEach(product => {
+      tableHTML += '<tr>' +
+        `<td>${product.name}</td>` +
+        `<td>${product.category}</td>` +
+        `<td>${product.description}</td>` +
+        `<td>${product.price}</td>` +
+        `<td><img style="width:50px;height:50px" src="/product-image/${product._id}.jpg" alt=""></td>` +
+        '<td>' +
+        `<a href="/admin/edit-product/${product._id}" class="btn btn-primary btn-sm btn-block">Edit</a>` +
+        `<a href="/admin/delete-product/${product._id}" class="btn btn-danger btn-sm btn-block" onclick="return confirm('Are you sure you want to delete ${product.name}')">Delete</a>` +
+        '</td>' +
+        '</tr>';
+    });
+
+    tableHTML += '</tbody></table>';
+
+    // Update the table container with the new HTML
+    productsTableContainer.innerHTML = tableHTML;
+  }
+</script>

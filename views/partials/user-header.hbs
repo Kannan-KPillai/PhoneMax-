@@ -25,15 +25,13 @@
                     <a class="nav-link" style="color: white;" href="/orders">Orders</a>
                 </li>
                 
+                <li class="nav-item">
+                <a class="nav-link" style="color: white;" href="/user-profile">Profile</a>
+                </li>
                 {{/if}}
             </ul>
 
-            <!-- Search Bar -->
-            <form class="form-inline my-2 my-lg-0">
-                <input id="searchInput" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                {{!-- <button class="btn btn-outline-light my-2 my-sm-0" type="submit" onclick="searchFunction()">Search</button> --}}
-            </form>
-
+           
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -54,6 +52,8 @@
         </div>
     </nav>
 </header>
+
+
 
 <script>
     function searchFunction() {

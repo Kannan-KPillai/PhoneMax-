@@ -6,10 +6,10 @@ module.exports={
 
     addCategory:(category)=>{
         return new Promise(async(resolve,reject)=>{
-            let catExist  = await db.get().collection(collection.CATEGORY_COLLECTION).findOne({Category:category.Category})
+            let catExist  = await db.get().collection(collection.CATEGORY_COLLECTION).findOne({Category:category.category})
 
             if(!catExist){
-                db.get().collection(collection.CATEGORY_COLLECTION).insertOne(category)
+             let data = await db.get().collection(collection.CATEGORY_COLLECTION).insertOne(category)
                 console.log(data.Category)
 
                    resolve(data);
@@ -109,5 +109,17 @@ AllProductsPagination:(val)=>{
       .toArray()
       resolve(products)
     })
-  }
+  },
+
+ 
+
+
+
+
+
+
+
+
 }
+
+

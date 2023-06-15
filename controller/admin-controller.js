@@ -6,7 +6,7 @@ var categoryHelpers = require('../helpers/category-helpers')
 
 
 //*********** AdminLogin (get method) controller */
- function adminLoginGet(req,res){
+ async function adminLoginGet(req,res){
     if(req.session.admin){
       res.redirect('/admin')
     }else{
@@ -23,7 +23,7 @@ var categoryHelpers = require('../helpers/category-helpers')
         if (response.status) {
           req.session.admin = response.admin;
           req.session.admin.loggedIn = true;
-          res.render('admin/dashboard');
+          res.redirect('/admin/dashboard');
         } else {
           req.session.adminloginErr = "Invalid username or password";
           res.redirect('/admin/adminLogin');

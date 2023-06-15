@@ -1,0 +1,100 @@
+<section>
+    <div class="container">
+        <div class="row mt-4">
+            <a href="/admin/addBanner" class="btn btn-success ml-auto">Add banner</a>
+        </div>
+        <div class="table-responsive mt-5">
+            <table class="table table-bordered table-hover" id="productsTable">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Banner</th>
+                        <th scope="col">Options</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each banners}}
+                        <tr>
+  <td><img style="width: 700px; height: 200px;" src="/banner-image/{{this._id}}.jpg" alt=""></td>
+<td>
+  <a href="/admin/delete-banner/{{this._id}}" class="btn btn-danger btn-sm" onclick="confirmDelete('{{this._id}}'); return false;">Delete</a>
+</td>
+
+</tr>
+
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+
+
+<style>
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding-bottom: 2rem;
+  }
+
+  .btn {
+    border-radius: 0;
+  }
+
+  .btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+
+  .btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+  }
+
+  .table-responsive {
+    border: none;
+  }
+
+  .table {
+    font-size: 14px;
+  }
+
+  .table thead th {
+    font-weight: bold;
+    vertical-align: middle;
+    color: #fff;
+    background-color: #343a40;
+    border-color: #343a40;
+  }
+
+  .table tbody td {
+    vertical-align: middle;
+  }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  function confirmDelete(bannerId) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You are about to delete this banner.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Delete',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Proceed with the deletion by redirecting or making an AJAX request
+        window.location.href = `/admin/delete-banner/${bannerId}`;
+      }
+    });
+  }
+</script>

@@ -10,14 +10,14 @@ const nodemailer = require('nodemailer');
 //***************** home controller method  (get)****************/
 async function home(req, res, next) {
     let user = req.session.user;
-   
+    let banners = await userHelpers.getBanners();
     let cartCount= null;
     if(req.session.user){
     cartCount=await userHelpers.getCartCount(req.session.user._id)
     }
     productHelpers.getLatestProducts().then((products) => {
       categoryHelpers.getAllCategory().then((category) => {
-        res.render('user/home-page', { category, user, products, guest: true,cartCount })
+        res.render('user/home-page', { category, user, products, guest: true,cartCount ,banners})
       })
     })
   }
@@ -28,9 +28,9 @@ async function home(req, res, next) {
     let val = Number(req.query.p);
     userHelpers.allProductsPagination(val).then((products) => {
       
-      res.render('user/all-products', { user: true, products, user,guest:true });
+      res.render('user/all-products', { user: true, products, user, guest:true });
     }).catch((error) => {
-      console.log(error);
+     
       res.redirect('/'); // Handle the error by redirecting to the home page or an error page
     });
   }
@@ -68,14 +68,14 @@ async function home(req, res, next) {
         }
       })
       .catch((error) => {
-        console.log(error);
+        
         req.session.userloginErr = "An error occurred while logging in";
         res.redirect('/login');
       });
   }
 
 
-// ********************  user signup controller ************
+// ********************  user signup (get method) controller ************
 
 function signUp(req, res)  {
     res.render('user/signup', { 'loginErr': req.session.loginErr })
@@ -149,15 +149,12 @@ function signUp(req, res)  {
   }
 
 
-   
-
-
   //*********** product details(get method) controller   **********/
 
   async function proDetials (req, res) {
     let product = await productHelpers.getProductDetails(req.params.id)
     let user = req.session.user
-    res.render("user/product-details.hbs", { product, user: true, user })
+    res.render("user/product-details.hbs", { product, user: true, user,guest:true })
   
   }
 
@@ -169,7 +166,6 @@ function signUp(req, res)  {
     let products=await userHelpers.getCartProducts(req.session.user._id)
     if(products.length){
     let total = await userHelpers.getTotalAmount(req.session.user._id)
-    console.log(products);
     res.render('user/cart',{products, 'user':req.session.user._id,total})
     }else{
     req.session.cartEmpty= "Your cart is empty !!"
@@ -205,6 +201,7 @@ function signUp(req, res)  {
 
 
 
+
   //*********** cart product qunatity change (post method) controller **********/
 
 
@@ -226,9 +223,10 @@ function cartRemove(req,res,next){
 //***************delivery address (get method) controller ***********/
 
 async function deliveryAddressGet(req,res){
-  let user = await userHelpers.userAddresses(req.session.user._id)
-  let total = await userHelpers.getTotalAmount(req.session.user._id)
-  res.render('user/address',{total,user})
+  let user = req.session.user
+  let userAddresses = await userHelpers.getUserAddress(user._id)
+  let total = await userHelpers.getTotalAmount(user._id)
+  res.render('user/address',{total,user,userAddresses})
 }
 
 
@@ -238,8 +236,17 @@ async function deliveryAddressGet(req,res){
 async function deliveryAddress(req,res){
   let products = await userHelpers.getCartProductList(req.body.userId)
   let totalPrice= await userHelpers.getTotalAmount(req.body.userId)
-  userHelpers.placeOrder(req.body,products,totalPrice).then((response)=>{
-  res.json({status:true})
+  userHelpers.placeOrder(req.body,products,totalPrice).then((orderId)=>{
+
+    if(req.body['payment-method']==='COD'){
+  res.json({codSuccess:true})
+    }else{
+      userHelpers.generateRazorpay(orderId,totalPrice).then((response)=>{
+        console.log(response)
+        console.log('245 user controller')
+        res.json(response)
+      })
+    }
   })
 }
 
@@ -254,11 +261,11 @@ function orderSuccess(req, res)  {
 
 function addNewAddressPost(req,res){
   let userId = req.body.userId;
-  let addressobj = {
-    name:req.body.fullName,
-    address:req.body.address,
-    pincode:req.body.pincode,
-    mobile:req.body.mobile
+      let addressobj = {
+       name:req.body.fullName,
+       address:req.body.address,
+       pincode:req.body.pincode,
+       mobile:req.body.mobile
   }
   userHelpers.addNewAddress(userId,addressobj).then(()=>{
     res.redirect('/delivery-address')
@@ -268,15 +275,92 @@ function addNewAddressPost(req,res){
 //*******************user existing address (get method) controller*************/
 
 async function useExist(req, res){
-  let userId = req.query.id;
-  let index = req.query.i;
-  let user = await userHelpers.userAddresses(userId);
-  let userAddress = user.addresses[index];
-  let total = await userHelpers.getTotalAmount(userId);
-  res.render('user/address', { userAddress, user, total });
+  let Id = req.query.id;
+  let user = req.session.user;
+  let userAddresses = await userHelpers.getUserAddress(user._id);
+  let userAddress = await userHelpers.getOneAddress(Id);
+  let total = await userHelpers.getTotalAmount(user._id);
+  res.render('user/address', { userAddress, user, total,userAddresses });
+}
+
+
+//**************delete existing address (get method)  controller******/
+ function deleteAddressGet(req,res){
+  let Id = req.query.id
+  userHelpers.deleteAddress(Id)
+  res.redirect('/delivery-address')
+ }
+
+
+
+//********************** view you orders get controller *************/
+async function ordersGet(req,res){
+  let orders= await  userHelpers.getUserOrders(req.session.user._id)
+res.render('user/orders',{user:req.session.user,guest:true,orders})
 }
 
 
 
+
+// user profile management//
+async function userprofileget(req,res){
+  let user = req.session.user
+  // let user = await userHelpers.userDetails(userSession._id)
+  let userAddresses = await userHelpers.getUserAddress(user._id)
+  // let orderDetails = await userHelpers.getOrderDetails(userSession._id)
+  console.log(user) 
+  res.render('user/user-profile',{user,userAddresses})
+}
+
+
+//************ user profile get method  controller *********/
+  function userprofilepost(req,res){
+  let userId = req.body.userId;
+  let addressobj = {
+    name:req.body.firstname,
+    address:req.body.address,
+    pincode:req.body.pincode,
+    phone:req.body.phone
+  }
+  userHelpers.addNewAddress(userId,addressobj).then(()=>{
+    res.redirect('/user-profile')
+  })
+}
+
+
+//*************** edit user addreess ***********/
+async function edituseraddress  (req,res){
+  let user = req.session.user;
+  let addressId = req.query.id;
+  let Address = await userHelpers.getOneAddress(addressId) 
+
+  res.render('user/edit-address',{Address,user})
+}
+
+function edituseraddresspost (req,res){
+  let Id = req.query.id;
+  let addressobj = {
+    name:req.body.firstname,
+    address:req.body.address,
+    pincode:req.body.pincode,
+    phone:req.body.phone
+ }
+ userHelpers.editAddress(Id,addressobj) 
+ res.redirect('/user-profile')
+ }
+
+
+
+
+function deleteAddressget(req,res){
+  let Id = req.query.id;
+
+ userHelpers.deleteAddress(Id) 
+res.redirect('/user-profile')
+}
+
+
+
+
 module.exports={home,allProducts,login,signUp,logOut,proDetials,loginPost,signUpPost,userCart,addToCartGet,otp,cartQuantityChange,cartRemove,
-  deliveryAddress,deliveryAddressGet,orderSuccess,addNewAddressPost,useExist}
+  deliveryAddress,deliveryAddressGet,orderSuccess,addNewAddressPost,useExist,ordersGet, deleteAddressget,edituseraddresspost,edituseraddress, userprofilepost,userprofileget,deleteAddressGet}

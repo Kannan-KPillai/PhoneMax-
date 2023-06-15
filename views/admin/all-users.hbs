@@ -1,7 +1,7 @@
 
 <style>
   .container {
-    max-width: 800px;
+    max-width: 1000px;
     margin: 0 auto;
     padding-bottom: 2rem;
   }
@@ -63,9 +63,10 @@
           <td>{{this.Email}}</td>
           <td>
             {{#if this.isBlocked}}
-            <a href="/admin/unblock-user/{{this._id}}" class="btn btn-primary" onclick="return confirm('Are you sure you want to unblock the user {{this.Name}}?')">Unblock</a>
-            {{else}}
-            <a href="/admin/block-user/{{this._id}}" class="btn btn-danger" onclick="return confirm('Are you sure you want to block the user {{this.Name}}?')">Block</a>
+           <a href="/admin/unblock-user/{{this._id}}" class="btn btn-primary btn-block" onclick="return confirm('Are you sure you want to unblock the user {{this.Name}}?')">Unblock</a>
+{{else}}
+<a href="/admin/block-user/{{this._id}}" class="btn btn-danger btn-block" onclick="return confirm('Are you sure you want to block the user {{this.Name}}?')">Block</a>
+
             {{/if}}
           </td>
         </tr>

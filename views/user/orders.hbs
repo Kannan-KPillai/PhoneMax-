@@ -1,7 +1,3 @@
-
-
-
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,7 +9,7 @@
 
     .container {
       margin: 0 auto;
-      max-width: 800px;
+      max-width: 900px;
       padding: 20px;
       display: flex;
       flex-direction: column;
@@ -26,10 +22,7 @@
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       padding: 20px;
       margin-bottom: 20px;
-      width: 600px;
-      height: fit-content;
-      margin-left: auto;
-      margin-right: auto;
+      width: 100%;
     }
 
     h1 {
@@ -47,97 +40,152 @@
       padding-top: 20px;
     }
 
-    .order-history .order {
-      margin-bottom: 20px;
-      border-bottom: 1px solid #ccc;
-      padding-bottom: 10px;
-    }
-
-    .order-history .order:last-child {
-      border-bottom: none;
-      margin-bottom: 0;
-      padding-bottom: 0;
-    }
-
-    .order-history .order .order-info {
-      display: flex;
-      align-items: center;
-    }
-
-    .order-history .order .order-info .order-number {
-      color: #ffffff;
-      font-size: 16px;
-      margin-right: 10px;
-    }
-
-    .order-history .order .order-info .order-date {
-      color: #ffffff;
-      font-size: 16px;
-    }
-
-    .order-history .order .order-details {
-      margin-top: 10px;
-      color: #ffffff;
-      font-size: 14px;
-    }
-
-    .order-history .order .order-details ul {
-      list-style-type: none;
-      padding: 0;
-    }
-
-    .order-history .order .order-details ul li {
-      margin-bottom: 5px;
-    }
-
-    .order-history .order .order-details ul li span {
-      font-weight: bold;
-    }
-
-    .order-history .order .product-details {
-      margin-top: 10px;
-      color: #ffffff;
-      font-size: 14px;
-    }
-
-    .order-history .order .product-details table {
+    .order-history table {
       width: 100%;
+      color: #ffffff;
+      font-size: 14px;
     }
 
-    .order-history .order .product-details table th,
-    .order-history .order .product-details table td {
-      padding: 5px;
+    .order-history table th,
+    .order-history table td {
+      padding: 10px;
       text-align: left;
       vertical-align: top;
     }
 
-    .order-history .order .product-details table th {
+    .order-history table th {
       font-weight: bold;
+      background-color: rgba(33, 33, 33, 1);
+    }
+
+    .order-history table td {
+      border-bottom: 1px solid #ccc;
+    }
+
+    .order-history table td:last-child {
+      border-bottom: none;
+    }
+    .filter-container {
+      display: flex;
+      justify-content: flex-start;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+
+    /* Update the styles for the tick option */
+    .toggle-bar {
+      display: flex;
+      align-items: center;
+    }
+
+    .toggle-bar label {
+      color: white;
+      margin-right: 10px;
+    }
+
+    .toggle-bar input[type="checkbox"] {
+      transform: scale(1.5);
+      margin-right: 5px;
     }
   </style>
 </head>
 <body>
-
   <div class="container">
     <h1>Order History</h1>
-    {{#each orders}}
-    <div class="order-history">
-      <div class="order">
-        <div class="order-info">
-          <span class="order-number">Order id: {{this._id}}</span>
-        </div>
-        <div class="order-details">
-          <li>Address: <span>{{this.deliveryDetails.address}}</span></li>
-          <li>Pincode: <span>{{this.deliveryDetails.pincode}}</span></li>
-          <li>Mobile No: <span>{{this.deliveryDetails.mobile}}</span></li>
-          <li>Payment Method: <span>{{this.paymentMethod}}</span></li>
-          <li>Status: <span>{{this.status}}</span></li>
-          <li><strong>Total: <span style="font-size: 20px;">₹{{this.totalAmount}}</strong></span></li>
-        </div>
-       
+    <!-- Add the filter container with the tick option -->
+    <div class="filter-container">
+      <div class="toggle-bar">
+        <label for="toggle-latest">Show Latest Orders:</label>
+        <input type="checkbox" id="toggle-latest">
       </div>
     </div>
-    {{/each}}
+    <!-- Move the loop inside a separate div to preserve the heading and filter container -->
+    <div id="orderHistoryList">
+      {{#each orders}}
+      <div class="order-history">
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Date & time</th>
+              <th>Address</th>
+              <th>Pincode</th>
+              <th>Mobile No</th>
+              <th>Payment Method</th>
+              <th>Status</th>
+              <th>Total</th>
+              <th>Option</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                {{#each this.products}}
+                {{this.itemName}}<br><br>
+                {{/each}}
+              </td>
+              <td>{{this.date}}</td>
+              <td>{{this.deliveryDetails.address}}</td>
+              <td>{{this.deliveryDetails.pincode}}</td>
+              <td>{{this.deliveryDetails.mobile}}</td>
+              <td>{{this.paymentMethod}}</td>
+              <td>{{this.status}}</td>
+              <td>₹{{this.totalAmount}}</td>
+              <td>
+                {{#if (eq this.status "placed")}}
+                <a href="/cancel-order?id={{this._id}}&&st=Cancelled" type="button" class="btn btn-danger mt-1">Cancel</a>
+                {{/if}}
+                {{#if (eq this.status "Shipped")}}
+                <a href="/cancel-order?id={{this._id}}&&st=Cancelled" type="button" class="btn btn-danger mt-1">Cancel</a>
+                {{/if}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      {{/each}}
+    </div>
   </div>
+
+  <script>
+    const toggleLatestCheckbox = document.getElementById('toggle-latest');
+    const orderHistoryContainer = document.querySelector('#orderHistoryList');
+
+    toggleLatestCheckbox.addEventListener('change', function () {
+      if (toggleLatestCheckbox.checked) {
+        // Get all the order history elements
+        const orderHistoryElements = orderHistoryContainer.getElementsByClassName('order-history');
+
+        // Convert the HTMLCollection to an array
+        const orderHistoryArray = Array.from(orderHistoryElements);
+
+        // Sort the array in reverse order to get the latest orders first
+        const sortedOrderHistory = orderHistoryArray.reverse();
+
+        // Remove all order history elements from the container
+        while (orderHistoryContainer.firstChild) {
+          orderHistoryContainer.firstChild.remove();
+        }
+
+        // Append the sorted order history elements back to the container
+        sortedOrderHistory.forEach(orderHistory => {
+          orderHistoryContainer.appendChild(orderHistory);
+        });
+      } else {
+        // Reset the order history to its original order
+        const originalOrderHistory = Array.from(orderHistoryContainer.getElementsByClassName('order-history'));
+
+        // Remove all order history elements from the container
+        while (orderHistoryContainer.firstChild) {
+          orderHistoryContainer.firstChild.remove();
+        }
+
+        // Append the original order history elements back to the container
+        originalOrderHistory.forEach(orderHistory => {
+          orderHistoryContainer.appendChild(orderHistory);
+        });
+      }
+    });
+  </script>
 </body>
 </html>

@@ -12,6 +12,7 @@ var fileUpload= require('express-fileupload')
 var db= require('./config/connection');
 var session = require('express-session')
 var handlebars = require('handlebars');
+var chartjs = require('chart.js');
 
 const { log } = require('console');
 // view engine setup

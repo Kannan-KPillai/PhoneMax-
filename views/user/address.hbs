@@ -8,7 +8,8 @@
 </style>
 <div class="row">
   <!-- Existing Addresses Section -->
-  <div class="col-md-6 mb-4">
+  <div class="col-md-6 mb-4" style="padding-left: 50px;">
+    
     <div class="card mb-4">
       <div class="card-header py-3" style="background-color: rgba(21, 21, 21, 1);">
         <h5 class="mb-0" style="color: white;">Existing Addresses</h5>
@@ -16,23 +17,25 @@
       <div class="card-body" style="background-color: rgba(21, 21, 21, 1);">
         <!-- Address Cards -->
         <div class="row" style="background-color: rgba(21, 21, 21, 1);">
-           {{#each user.addresses}}
+           {{#each userAddresses}}
           <!-- Address 1 -->
           <div class="col-md-12 mb-3">
             <div class="card h-100" style="background-color: rgb(52 51 51)">
               <div class="card-body">
                      
-              <label class="form-check-label" for="address{{../user._id}}">
-                <h4 class="card-title" style="color: white;">{{this.name}}</h4>
-                <p class="card-text" style="color: white;">Address: {{this.address}}</p>
-                 <h5 class="card-text" style="color: white;">mobile: {{this.mobile}}</h5>
+              <label class="form-check-label" for="address{{this.userId}}">
+                <h4 class="card-title" style="color: white;">{{this.address.name}}</h4>
+                <p class="card-text" style="color: white;">Address: {{this.address.address}}</p>
+                 <h5 class="card-text" style="color: white;">mobile: {{this.address.mobile}}</h5>
               </label>
            <div>
-  <div class="d-flex justify-content-end" role="group" aria-label="Address Actions">
-    <a href="/use_address?id={{../user._id}}&&i={{@index}}" class="btn btn-success">Use </a>
-    <a href="/delete_address?id={{../user._id}}&&i={{@index}}" class="btn btn-danger">Delete</a>
-  </div>
+<div class="d-flex justify-content-end" role="group" aria-label="Address Actions">
+  <a href="/use_address?id={{this._id}}" class="btn btn-success" style="padding-right: 1rem;">Use</a>
+  <span style="margin-right: 1rem;"></span> <!-- Add a span element with margin for the desired gap -->
+  <a href="/delete_address?id={{this._id}}" class="btn btn-danger">Delete</a>
 </div>
+</div>
+
               </div>
             </div>
           </div>
@@ -96,20 +99,20 @@
         <!-- Add Address Form -->
         <form  action="" id="checkout-form">
           <div class="form-outline mb-4">
-            <input type="text" id="fullName" name="fullName" class="form-control " value="{{userAddress.name}}" required />
+            <input type="text" id="fullName" name="fullName" class="form-control " value="{{userAddress.address.name}}" required />
             <label class="form-label" style="color: white;">Full name</label>
           </div>
           <div class="form-outline mb-4">
-            <input type="text" id="address" name="address" class="form-control" value="{{userAddress.address}}" required />
+            <input type="text" id="address" name="address" class="form-control" value="{{userAddress.address.address}}" required />
             <label class="form-label" style="color: white;">Address</label>
           </div>
          
             <div class="form-outline mb-4">
-            <input type="number" id="pincode" name="pincode" class="form-control" value="{{userAddress.pincode}}" required />
+            <input type="number" id="pincode" name="pincode" class="form-control" value="{{userAddress.address.pincode}}" required />
             <label class="form-label" style="color: white;">Pincode</label>
           </div>
           <div class="form-outline mb-4">
-            <input type="number" id="mobile" name="mobile" class="form-control" value="{{userAddress.mobile}}" required />
+            <input type="number" id="mobile" name="mobile" class="form-control" value="{{userAddress.address.mobile}}" required />
             <label class="form-label" style="color: white;">Mobile Number</label>
             <input type="text" name="userId" id="" value="{{user._id}}" hidden>
           </div>
@@ -165,7 +168,7 @@
 </div>
 
 {{else}}
-<div class="col-md-6 mb-4">
+ <div class="col-md-6 mb-4" style="padding-right: 50px;">
     <div class="card mb-4">
       <div class="card-header py-3" style="background-color: rgba(21, 21, 21, 1);">
         <h5 class="mb-0" style="color: white;">Address details</h5>
@@ -244,36 +247,95 @@
 </div>
 </div>
 </div>
+
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
+ 
+  $("#checkout-form").submit((e) => {
+  e.preventDefault();
+  $.ajax({
+    url: '/delivery-address',
+    method: 'post',
+    data: $('#checkout-form').serialize(),
+    success: (response) => {
+      if (response.codSuccess) {
+        swal("Order Placed", "Your order has been successfully placed!", "success").then(() => {
+          location.href = '/order-success';
+        });
+      } else {
+        razorpayPayment(response);
+      }
+    }
+  });
+});
+
+
+  function razorpayPayment (order){
+    console.log(order.id)
+    
+   var options = {
+    "key": "rzp_test_6dmeULoXfLlnAO", // Enter the Key ID generated from the Dashboard
+    "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "PhoneMax",
+    "description": "Test Transaction",
+    "image": "",
+    "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    "handler": function (response){
+        verifyPayment(response,order)
+    },
+    "prefill": {
+        "name": "Gaurav Kumar",
+        "email": "gaurav.kumar@example.com",
+        "contact": "9000090000"
+    },
+    "notes": {
+        "address": "Razorpay Corporate Office"
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+  };
+   var rzp1 = new Razorpay(options);
+    rzp1.open();
+}
+
+
+
+  function verifyPayment(payment, order) {
+  $.ajax({
+    url: '/verify-payment',
+    data: {
+      payment,
+      order
+    },
+    method: 'post',
+    success: (response) => {
+      if (response.status) {
+        swal("Payment Verified", "Payment successfully verified!", "success").then(() => {
+          location.href = '/order-success';
+        });
+      } else {
+        swal("Payment Failed", "Payment verification failed.", "error");
+      }
+    }
+  });
+}
+
+</script>
+
+<script>
+  
   const form = document.getElementById('checkout-form');
 
   form.addEventListener('submit', function (event) {
     event.preventDefault();
     if (form.checkValidity()) {
       // Form is valid, perform form submission or further processing
-      alert('Form submitted successfully');
+    
     } else {
-      // Form is invalid, show error messages or handle validation errors
       alert('Please fill in all the required fields');
     }
   });
-
-
-  $("#checkout-form").submit((e)=>{
-     e.preventDefault()
-     $.ajax({
-      url:'/delivery-address',
-      method:'post',
-      data:$('#checkout-form').serialize(),
-      success:(response)=>{
-        alert(response)
-        if(response.status){
-          location.href='/order-success'
-        }
-      }
-     })
-  })
-
-
-
 </script>

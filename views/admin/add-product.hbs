@@ -1,113 +1,159 @@
-<header>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+
+    .navbar {
+      margin-bottom: 20px;
+    }
+
+    .navbar-brand {
+      background-color: white;
+      font-size: 24px;
+      font-weight: bold;
+      width: 100%;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .form-control-file {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .form-control-file input[type="file"] {
+      position: absolute;
+      top: 0;
+      right: 0;
+      opacity: 0;
+      font-size: 100px;
+    }
+
+    #imagePreview {
+      max-width: 100%;
+      height: auto;
+      display: none;
+      margin-top: 10px;
+    }
+  </style>
+  <title>PhoneMax Admin Panel - Add Product</title>
+</head>
+
+<body>
+  <header>
     <nav class="navbar navbar-expand-lg navbar-light bg-info">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03"
-            aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-<a class="navbar-brand d-flex justify-content-center" style="font-size: x-large; font-weight: bold; background-color: white; width: 100%; height: 10 px;">
-    PhoneMax Admin Panel
-</a>
-  </nav>
-</header>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03"
+        aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <a class="navbar-brand" href="#" style="font-size: x-large; font-weight: bold; width: 100%; height: 50px;">
+        PhoneMax Admin Panel
+      </a>
+    </nav>
+  </header>
 
-<section>
+  <section>
     <div class="container mt-4">
-    <div class="row">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <h2 class="text-center mb-4">Add Product</h2>
+          <form action="/admin/add-product" method="POST" enctype="multipart/form-data">
 
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" name="name" class="form-control" required>
+            </div>
 
+            <div class="form-group">
+              <label for="category">Category</label>
+              <select name="category" class="form-control" required>
+                <option value="">Select a category</option>
+                {{#each category}}
+                <option value="{{this.category}}">{{this.category}}</option>
+                {{/each}}
+              </select>
+            </div>
 
-        <div class="col-md-6 ">
-            <h2 class="text-center">Add Product</h2>
-            <form action="/admin/add-product" method="POST" enctype="multipart/form-data">
-             
-                <label for="">Name</label>
-                <input type="text" name="name" class="form-control"> 
+            <div class="form-group">
+              <label for="price">Price</label>
+              <input type="text" name="price" class="form-control" required>
+            </div>
 
-                <label for="category">Category</label>
-                    <select name="category" class="form-control" required>
-                        <option >Select a category</option>
-                        {{#each category}}
-                        <option >{{this.category}}</option>
-                        {{/each}}
-                    </select> 
-
-                <label for="">Price</label>
-                <input type="text" name="price" class="form-control"> 
-
-                <label for="">Description</label>
-                <input type="text" name="description" class="form-control"> 
-
-             {{!-- <label for="">Image</label>
-                <input type="file" name="Image" class="form-control">--}}
-                <label for="">Image</label>
-             
-{{!-- <div>
-    <input type="file" id="imageInput" name="Image" class="form-control"  class="form-control-file" accept="image/*" multiple required>
-    <img id="imagePreview" src="#" alt="Image Preview" style="max-width: 100%; height: auto; display: none;">
-    <input type="hidden" id="croppedImage" name="croppedImage">
-    <button type="submit" class="btn btn-success mt-4">Submit</button>
-     --}}
-
-    
+            <div class="form-group">
+              <label for="description">Description</label>
+              <input type="text" name="description" class="form-control" required>
+            </div>
+                 <label for="">Image</label>  
 <div>
   <input type="file" id="imageInput" name="Image" class="form-control-file" accept="image/*" required>
   <img id="imagePreview" src="#" alt="Image Preview" style="max-width: 100%; height: auto; display: none;">
   <input type="hidden" id="croppedImage" name="croppedImage">
-  <button type="submit" class="btn btn-success mt-4">Submit</button>
-</div>
-
-     </form> 
-
-</div>
-        </div>
-    </div>
-   </div>     
-   
-
-
   
-</section>
+</div>
 
+            <div class="text-center">
+              <button type="submit" class="btn btn-success mt-4">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const imageInput = document.getElementById('imageInput');
-    const imagePreview = document.getElementById('imagePreview');
-    const croppedImageInput = document.getElementById('croppedImage');
-    let cropper;
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const imageInput = document.getElementById('imageInput');
+      const imagePreview = document.getElementById('imagePreview');
+      const croppedImageInput = document.getElementById('croppedImage');
+      let cropper;
 
-    imageInput.addEventListener('change', function(event) {
-      const file = event.target.files[0];
+      imageInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
 
-      if (file && file.type.startsWith('image/')) {
-        const reader = new FileReader();
+        if (file && file.type.startsWith('image/')) {
+          const reader = new FileReader();
 
-        reader.onload = function() {
-          imagePreview.src = reader.result;
+          reader.onload = function() {
+            imagePreview.src = reader.result;
+            imagePreview.style.display = 'block';
 
-          if (cropper) {
-            cropper.destroy();
-          }
+            if (cropper) {
+              cropper.destroy();
+            }
 
-          cropper = new Cropper(imagePreview, {
-            aspectRatio: 1,
-            viewMode: 2,
-            autoCropArea: 1,
-            ready: function() {
-              const canvas = cropper.getCroppedCanvas({
-                width: 200, // Set desired cropped image width
-                height: 200, // Set desired cropped image height
-              });
-              const croppedImageDataURL = canvas.toDataURL('image/jpeg');
+            cropper = new Cropper(imagePreview, {
+              aspectRatio: 1,
+              viewMode: 2,
+              autoCropArea: 1,
+              ready: function() {
+                const canvas = cropper.getCroppedCanvas({
+                  width: 200, // Set desired cropped image width
+                  height: 200, // Set desired cropped image height
+                });
+                const croppedImageDataURL = canvas.toDataURL('image/jpeg');
 
-              croppedImageInput.value = croppedImageDataURL;
-            },
-          });
-        };
+                croppedImageInput.value = croppedImageDataURL;
+              },
+            });
+          };
 
-        reader.readAsDataURL(file);
-      }
+          reader.readAsDataURL(file);
+        }
+      });
     });
-  });
-</script>
+  </script>
+</body>
 
+</html>

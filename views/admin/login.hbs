@@ -11,11 +11,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
-<body style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f8f9fa;">
+<body style="display: flex; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(to bottom, #fff, #5f9bd3d3);">
     <div style="width: 380px; padding: 20px; background-color: #fff; border-radius: 5px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center;">
-            <h2 style="margin-bottom: 20px;">Admin Login</h2>
+            <h2 style="margin-bottom: 20px;">Admin Login</h2>       
         </div>
+           </body>
 
         {{#if loginErr}}
             <p style="color: orangered; text-align: center;">{{loginErr}}</p>
@@ -27,9 +28,6 @@
             <input type="submit" value="Log In" style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px; background-color: #007bff; color: #fff; border: none; cursor: pointer;">
         </form>
 
-        <div style="text-align: center;">
-            <h2>ADMIN MODE</h2>
-        </div>
 
         <div style="text-align: center;">
             <a href="/login" style="text-decoration: none;">
