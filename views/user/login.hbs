@@ -1,21 +1,21 @@
 <header>
-  <nav class="navbar navbar-expand-lg navbar-light" style="background-color: black;">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03"
-      aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-      <a class="navbar-brand" style="font-size: xx-large; font-weight: bold; color:white">PhoneMax</a>
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" style="color: white;" href="/">Menu<span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" style="color: white;" href="/all-products">All Products</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: black;">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03"
+            aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+            <a class="navbar-brand" style="font-size: xx-large; font-weight: bold; color:white">PhoneMax</a>
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" style="color: white;" href="/">Menu<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" style="color: white;" href="/all-products">All Products</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 </header>
 
 <section class="vh-100" style="background-color: #151515;">
@@ -51,19 +51,23 @@
                                         <button type="submit" class="btn btn-dark btn-lg" style="width: 14rem;"> Login
                                         </button>
                                     </div>
-                                    </form>
+                                </form>
 
 
-                                    <form action='/otp-login' method="post">
+                                <form action='/otp-login' method="POST">
 
                                     <p><strong>OR login With OTP</strong></p>
-                                        <div class="form-outline mb-4">
-                                        <input type="email" name="Email" class="form-control form-control-lg"
+                                    <div class="form-outline mb-4">
+                                        <label class="form-label" name="Number">Your Number</label>
+                                        <input type="text" name="number" class="form-control form-control-lg"
                                             style="border-color: #231b1b;" required />
-                                        <label class="form-label" name="Email">Email address</label>
+
+                                        <div class="invalid-feedback">
+                                            Please enter a valid number.
+                                        </div>
                                     </div>
-                                    
-                                         <div class="pt-1 mb-4 d-flex justify-content-center">
+
+                                    <div class="pt-1 mb-4 d-flex justify-content-center">
                                         <button type="submit" class="btn btn-dark btn-lg" style="width: 14rem;"> Submit
                                         </button>
                                     </div>
@@ -71,7 +75,7 @@
                                     <p class="mb-5 pb-lg-2" style="color: #13141e;">Don't have an account? <a
                                             href="/signup" style="color: #313cb2;">Register here</a></p>
 
-                                    </form>
+                                </form>
 
 
 

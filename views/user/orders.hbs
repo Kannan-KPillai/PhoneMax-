@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{{!-- <!DOCTYPE html>
 <html>
 <head>
   <style>
@@ -188,4 +188,366 @@
     });
   </script>
 </body>
+</html> --}}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: "Nunito Sans", "Helvetica Neue", sans-serif;
+      background-color: rgba(21, 21, 21, 1);
+    }
+
+    .container {
+      margin: 0 auto;
+      max-width: 900px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .order-history {
+      background-color: rgba(53, 53, 53, 1);
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+    h1 {
+      color: #88B04B;
+      font-weight: 900;
+      font-size: 30px;
+      margin-bottom: 20px;
+      padding-top: 60px;
+    }
+
+    .order-history h2 {
+      color: white;
+      font-weight: bold;
+      margin-bottom: 10px;
+      padding-top: 20px;
+    }
+
+    .order-history table {
+      width: 100%;
+      color: #ffffff;
+      font-size: 14px;
+    }
+
+    .order-history table th,
+    .order-history table td {
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .order-history table th {
+      font-weight: bold;
+      background-color: rgba(33, 33, 33, 1);
+    }
+
+    .order-history table td {
+      border-bottom: 1px solid #ccc;
+    }
+
+    .order-history table td:last-child {
+      border-bottom: none;
+    }
+    .filter-container {
+      display: flex;
+      justify-content: flex-start;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+
+    /* Update the styles for the tick option */
+    .toggle-bar {
+      display: flex;
+      align-items: center;
+    }
+
+    .toggle-bar label {
+      color: white;
+      margin-right: 10px;
+    }
+
+    .toggle-bar input[type="checkbox"] {
+      transform: scale(1.5);
+      margin-right: 5px;
+    }
+
+    /* Responsive Styles */
+    @media only screen and (max-width: 600px) {
+      h1 {
+        font-size: 24px;
+        padding-top: 20px;
+      }
+
+      .order-history h2 {
+        font-size: 18px;
+        padding-top: 10px;
+      }
+
+      .order-history table th,
+      .order-history table td {
+        padding: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+    <div style="height:3rem;background-color: rgba(21, 21, 21, 1)"></div>
+  <div class="container">
+    <h1>Order History</h1>
+    <!-- Add the filter container with the tick option -->
+    <div class="filter-container">
+      <div class="toggle-bar">
+        <label for="toggle-latest">Show Oldest Orders:</label>
+        <input type="checkbox" id="toggle-latest">
+      </div>
+    </div>
+    <!-- Move the loop inside a separate div to preserve the heading and filter container -->
+    <div id="orderHistoryList">
+      {{#each orders}}
+      <div class="order-history">
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Date & time</th>
+              <th>Address</th>
+              <th>Pincode</th>
+              <th>Mobile No</th>
+              <th>Payment Method</th>
+              <th>Status</th>
+              <th>Total</th>
+              <th>Option</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                {{#each this.products}}
+                {{this.itemName}}<br><br>
+                {{/each}}
+              </td>
+              <td>{{this.date}}</td>
+              <td>{{this.deliveryDetails.address}}</td>
+              <td>{{this.deliveryDetails.pincode}}</td>
+              <td>{{this.deliveryDetails.mobile}}</td>
+              <td>{{this.paymentMethod}}</td>
+              <td>{{this.status}}</td>
+              <td>₹{{this.totalAmount}}</td>
+              <td>
+                {{#if (eq this.status "placed")}}
+                {{!-- <a href="/cancel-order?id={{this._id}}&&st=Cancelled" type="button" class="btn btn-danger mt-1">Cancel</a> --}}
+                <a href="/cancel-order?id={{this._id}}&&st=Cancelled" id="cancel-btn" type="button" class="btn btn-danger mt-1">Cancel</a>
+                {{/if}}
+                {{#if (eq this.status "Shipped")}}
+                {{!-- <a href="/cancel-order?id={{this._id}}&&st=Cancelled" type="button" class="btn btn-danger mt-1">Cancel</a> --}}
+                <a href="/cancel-order?id={{this._id}}&&st=Cancelled" type="button" class="btn btn-danger mt-1">Cancel</a>
+                {{/if}}
+                {{#if (eq this.status "Delivered")}}
+                {{#if hasExpired}}
+                     <button style="width: 7rem;" class="btn btn-danger mt-2" disabled>Return</button>
+                {{else}}
+                    <a href="/return-order?id={{this._id}}&st=Return" style="width: 7rem;" class="btn btn-danger mt-2"
+                onclick="showReturnConfirmation(event)">Return</a>
+                {{/if}}
+                {{/if}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+
+<!-- Footer -->
+<footer class="text-center text-lg-start text-white" style="background-color: #1c2331; height:450px">
+  <!-- Section: Social media -->
+  <section class="d-flex justify-content-between p-4" style="background-color: #000000">
+    <!-- Left -->
+    <div class="me-5">
+      <span><strong>Shop Mobile Phones Online at the Best Prices in India</strong></span>
+    </div>
+    <!-- Left -->
+  </section>
+  <!-- Section: Social media -->
+
+  <!-- Section: Links -->
+  <section class="mt-5">
+    <div class="container text-center text-md-start">
+      <!-- Grid row -->
+      <div class="row mt-3">
+        <!-- Grid column -->
+        <div class="col-md-6 col-lg-4 col-xl-3 mx-auto mb-4">
+          <!-- Content -->
+          <h6 class="text-uppercase fw-bold">PhoneMax</h6>
+          <hr class="mb-4 mt-0 d-inline-block mx-auto" style="width: 60px; background-color: #7c4dff; height: 2px" />
+          <p>
+           It’s easy to get caught up in acronyms and tech specs while buying a new smartphone but no matter your budget, your usage, or your OS preference, you’ll always find the best smartphone for yourself at PhoneMax. 
+          </p>
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col-md-6 col-lg-2 col-xl-2 mx-auto mb-4">
+          <!-- Links -->
+          <h6 class="text-uppercase fw-bold">Products</h6>
+          <hr class="mb-4 mt-0 d-inline-block mx-auto" style="width: 60px; background-color: #7c4dff; height: 2px" />
+          <p>
+            <a href="#!" class="text-white">Android SmartPhones</a>
+          </p>
+          <p>
+            <a href="#!" class="text-white">Apple SmartPhones</a>
+          </p>
+          <p>
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col-md-6 col-lg-2 col-xl-2 mx-auto mb-4">
+          <!-- Links -->
+          <h6 class="text-uppercase fw-bold">Useful links</h6>
+          <hr class="mb-4 mt-0 d-inline-block mx-auto" style="width: 60px; background-color: #7c4dff; height: 2px" />
+          <p>
+            <a href="#!" class="text-white">Help And Support</a>
+          </p>
+          <p>
+            <a href="#!" class="text-white">FAQs</a>
+          </p>
+          <p>
+            <a href="#!" class="text-white">Buying Guide</a>
+          </p>
+          <p>
+            <a href="#!" class="text-white">Return Policy</a>
+          </p>
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col-md-6 col-lg-3 col-xl-3 mx-auto mb-4">
+          <!-- Links -->
+          <h6 class="text-uppercase fw-bold">Contact</h6>
+          <hr class="mb-4 mt-0 d-inline-block mx-auto" style="width: 60px; background-color: #7c4dff; height: 2px" />
+         
+          <p><i class="fas fa-envelope mr-3"></i> phonemax@.com</p>
+          <p><i class="fas fa-phone mr-3"></i> + 01 234 567 88</p>
+          <p><i class="fas fa-print mr-3"></i> + 01 234 567 89</p>
+        </div>
+        <!-- Grid column -->
+      </div>
+      <!-- Grid row -->
+    </div>
+  </section>
+  <!-- Section: Links -->
+
+  <!-- Footer Text -->
+  <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
+  Copyright @PhoneMax2023
+  </div>
+  <!-- Footer Text -->
+</footer>
+<!-- Footer -->
+
+
+
+  <script>
+    const toggleLatestCheckbox = document.getElementById('toggle-latest');
+    const orderHistoryContainer = document.querySelector('#orderHistoryList');
+
+    toggleLatestCheckbox.addEventListener('change', function () {
+      if (toggleLatestCheckbox.checked) {
+        // Get all the order history elements
+        const orderHistoryElements = orderHistoryContainer.getElementsByClassName('order-history');
+
+        // Convert the HTMLCollection to an array
+        const orderHistoryArray = Array.from(orderHistoryElements);
+
+        // Sort the array in reverse order to get the latest orders first
+        const sortedOrderHistory = orderHistoryArray.reverse();
+
+        // Remove all order history elements from the container
+        while (orderHistoryContainer.firstChild) {
+          orderHistoryContainer.firstChild.remove();
+        }
+
+        // Append the sorted order history elements back to the container
+        sortedOrderHistory.forEach(orderHistory => {
+          orderHistoryContainer.appendChild(orderHistory);
+        });
+      } else {
+        // Reset the order history to its original order
+        const originalOrderHistory = Array.from(orderHistoryContainer.getElementsByClassName('order-history'));
+
+        // Remove all order history elements from the container
+        while (orderHistoryContainer.firstChild) {
+          orderHistoryContainer.firstChild.remove();
+        }
+
+        // Append the original order history elements back to the container
+        originalOrderHistory.forEach(orderHistory => {
+          orderHistoryContainer.appendChild(orderHistory);
+        });
+      }
+    });
+  </script>
+</body>
 </html>
+
+
+<script>
+  document.getElementById('cancel-btn').addEventListener('click', function (event) {
+    event.preventDefault(); // Prevent the default behavior of the link
+
+    // Display the confirmation dialog using SweetAlert
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You are about to cancel the order.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, cancel it!',
+      cancelButtonText: 'No, keep it'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // If the user confirms, show a success message and redirect after a delay
+        Swal.fire({
+          title: 'Order Cancelled',
+          text: 'Your order has been successfully canceled.',
+          icon: 'success',
+          timer: 3000, // Adjust the delay time as needed (in milliseconds)
+          showConfirmButton: false
+        }).then(() => {
+          // Redirect to the cancel order URL after the delay
+          window.location.href = event.target.href;
+        });
+      }
+    });
+  });
+ 
+
+ function showReturnConfirmation(event) {
+    event.preventDefault(); // Prevent the default link behavior
+
+    Swal.fire({
+      title: 'Return Order',
+      text: 'Are you sure you want to cancel this order?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, return it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = event.target.href; // Redirect to the return order URL
+      }
+    });
+  }
+</script>

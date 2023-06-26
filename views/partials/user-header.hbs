@@ -1,16 +1,22 @@
 
-    <header>
-    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: black;">
+<style>
+.navbar-toggler-icon {
+  background-color: rgb(89, 86, 86);
+}
+</style>
+
+ <header>
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" style="background-color: black;">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03"
-            aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+            aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation" style="color: #fff;">
+            <span class="navbar-toggler-icon" style="color: rgb(255, 255, 255);"></span>
         </button>
-        <button onclick="history.back()" style="background-color: black; color: white;">Go Back</button>
+        <button onclick="history.back()" style="background-color: black; color: white;" class="btn btn-dark">Go Back</button>
 
-        <a class="navbar-brand" style="font-size: xx-large; font-weight: bold; color:white; padding-left: 50px;">PhoneMax</a>
+        <a class="navbar-brand" style="font-size: xx-large; font-weight: bold; color: white; padding-left: 100px;">PhoneMax</a>
 
-        <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo03" >
+            <ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
                     <a class="nav-link" style="color: white;" href="/">Menu<span class="sr-only">(current)</span></a>
                 </li>
@@ -26,12 +32,11 @@
                 </li>
                 
                 <li class="nav-item">
-                <a class="nav-link" style="color: white;" href="/user-profile">Profile</a>
+                    <a class="nav-link" style="color: white;" href="/user-profile">Profile</a>
                 </li>
                 {{/if}}
             </ul>
 
-           
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -41,7 +46,7 @@
                     Account
                     {{/if}}
                 </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                     {{#if user}}
                     <a class="dropdown-item" href="/logout">Logout</a>
                     {{else}}
@@ -49,18 +54,6 @@
                     {{/if}}
                 </div>
             </div>
-        </div>
+        </div> 
     </nav>
-</header>
-
-
-
-<script>
-    function searchFunction() {
-        event.preventDefault(); // Prevents the form from submitting and page reload
-        var searchTerm = document.getElementById("searchInput").value;
-        // Perform search functionality with the searchTerm
-        console.log("Searching for: " + searchTerm);
-        // Add your own logic here for handling the search functionality
-    }
-</script>
+</header> 

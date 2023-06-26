@@ -1,48 +1,3 @@
-{{!-- 
-
-<section>
-    <div class="container">
-        <div class="row mt-4">
-            <a href="/admin/add-category" class="btn btn-success ml-auto">Add Categories</a>
-
-        </div>
-        
-        <table class="table mt-5 "id="productsTable" >
-  <thead>
-    <tr>
-      
-      <th scope="col">Image</th>
-      <th scope="col">Category</th>
-      <th scope="col">Brand</th>
-      <th scope="col"></th>
-      
-      <th>Option</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#each category}}
-    <tr>
-    
-       <td><img style="width: 50px; height: 50px;" src="/category-image/{{this._id}}.jpg" alt=""></td>
-     <td>{{this.category}}</td>
-      <td>{{this.brand}}</td>
-      <td>{{this.Status}}</td>
-      <td>
-      
-        <a href="/admin/edit-category/{{this._id}}" class="btn btn-primary">Edit</a>
-          {{#if this.isHide}} 
-         <a href="/admin/show-category/{{this._id}}" class="btn btn-success" onclick="return confirm('Are you want to Show{{this.Name}}')">Show</a>
-          {{else}}
-           <a href="/admin/hide-category/{{this._id}}" class="btn btn-danger" onclick="return confirm('Are you want to Hide{{this.Name}}')">Hide</a>
-          {{/if}}
-      </td>
-    </tr>
-   {{/each}}
-  </tbody>
-</table>
-    </div>
-</section> --}}
-
 
 
 <section>
@@ -57,24 +12,20 @@
           <tr>
             <th scope="col">Image</th>
             <th scope="col">Category</th>
-            <th scope="col">Brand</th>
-            <th scope="col">Status</th>
             <th scope="col">Options</th>
           </tr>
         </thead>
         <tbody>
           {{#each category}}
           <tr>
-            <td><img style="width: 50px; height: 50px;" src="/category-image/{{this._id}}.jpg" alt=""></td>
+            <td><img style="width: 50px; height: 50px;" src="{{this.photos.[0].fileName}}" alt=""></td>
             <td>{{this.category}}</td>
-            <td>{{this.brand}}</td>
-            <td>{{this.Status}}</td>
             <td>
-              <a href="/admin/edit-category/{{this._id}}" class="btn btn-primary btn-sm">Edit</a>
+             <a href="/admin/edit-category/{{this._id}}" class="btn btn-primary btn-sm">Edit</a>
               {{#if this.isHide}}
-              <a href="/admin/show-category/{{this._id}}" class="btn btn-success btn-sm" onclick="return confirm('Are you sure you want to show {{this.category}}')">Show</a>
+             <button class="btn btn-success btn-sm show-button" data-id="{{this._id}}">Show</button>
               {{else}}
-              <a href="/admin/hide-category/{{this._id}}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to hide {{this.category}}')">Hide</a>
+              <button class="btn btn-danger btn-sm hide-button" data-id="{{this._id}}">Hide</button>
               {{/if}}
             </td>
           </tr>
@@ -83,13 +34,6 @@
       </table>
     </div>
   </div>
-  <nav aria-label="Page navigation example">
-      <ul class="pagination justify-content-center">
-        <li class="page-item"><a class="page-link" href="/admin/view-category?p=1">1</a></li>
-        <li class="page-item"><a class="page-link" href="/admin/view-category?p=2">2</a></li>
-        <li class="page-item"><a class="page-link" href="/admin/view-category?p=3">3</a></li>
-      </ul>
-    </nav>
 </section>
 
 <style>
@@ -138,5 +82,44 @@
     vertical-align: middle;
   }
 </style>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const categoryContainer = document.getElementById('productsTable');
+    categoryContainer.addEventListener('click', function(event) {
+      const target = event.target;
+      if (target.classList.contains('show-button')) {
+        event.preventDefault();
+        const categoryId = target.getAttribute('data-id');
 
+        Swal.fire({
+          title: 'Are you sure?',
+          text: 'Do you want to show this category?',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Show',
+          cancelButtonText: 'Cancel',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = '/admin/show-category/' + categoryId;
+          }
+        });
+      } else if (target.classList.contains('hide-button')) {
+        event.preventDefault();
+        const categoryId = target.getAttribute('data-id');
 
+        Swal.fire({
+          title: 'Are you sure?',
+          text: 'Do you want to hide this category?',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Hide',
+          cancelButtonText: 'Cancel',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = '/admin/hide-category/' + categoryId;
+          }
+        });
+      }
+    });
+  });
+</script>

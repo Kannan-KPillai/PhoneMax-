@@ -4,21 +4,21 @@ const { response } = require('../app');
 var objectId = require('mongodb').ObjectId
 module.exports={
 
-    addCategory:(category)=>{
-        return new Promise(async(resolve,reject)=>{
-            let catExist  = await db.get().collection(collection.CATEGORY_COLLECTION).findOne({Category:category.category})
-
-            if(!catExist){
-             let data = await db.get().collection(collection.CATEGORY_COLLECTION).insertOne(category)
-                console.log(data.Category)
-
-                   resolve(data);
-            }else{
-                let data = false;
-                resolve(data)
-            }
-        })
-    },
+    addCategory: (category) => {
+        return new Promise(async (resolve, reject) => {
+        //   let catExist = await db.get().collection(collection.CATEGORY_COLLECTION).findOne({ Category: category.category });
+          let catExist = await db.get().collection(collection.CATEGORY_COLLECTION).findOne({ Category: { $regex: new RegExp('^' + category.category + '$', 'i') } });
+          if (!catExist) {
+            let data = await db.get().collection(collection.CATEGORY_COLLECTION).insertOne(category);
+            console.log(data.Category);
+            resolve(data);
+          } else {
+            let data = false;
+            resolve(data);
+          }
+        });
+      },
+      
     getAllCategory:()=>{
         return new Promise(async(resolve,reject)=>{
             let category=await db.get().collection(collection.CATEGORY_COLLECTION).find().toArray()
@@ -58,22 +58,7 @@ module.exports={
                 resolve(category)
             })
         })
-    },
-    // updateCategory:(catId, catDetails)=>{
-    //     return new Promise((resolve,reject)=>{
-    //         db.get().collection(collection.CATEGORY_COLLECTION)
-    //         .updateOne({_id:objectId(catId)}, {
-    //             $set:{
-    //                 name:catDetails.name,
-    //                 description:catDetails.description,
-    //                 price:catDetails.price,
-    //                 category:catDetails.category
-    //             }
-    //         }).then((response)=>{
-    //             resolve()
-    //         })
-    //     })
-    // },
+    }, 
     updateCategory:(catId,catDetails)=>{
         return new Promise(async(resolve,reject)=>{
       let catExist= await db.get().collection(collection.CATEGORY_COLLECTION).findOne({Category:catDetails.Category})
@@ -81,9 +66,8 @@ module.exports={
                 db.get().collection(collection.CATEGORY_COLLECTION).updateOne({_id:objectId(catId)},{
                 $set:{
                     category:catDetails.Category,
-                    name:catDetails.name,
-                    description:catDetails.description,
-                    price:catDetails.price,
+                    photos:catDetails.photos,
+                    offer:catDetails.offer,
                    
                 }
             }).then((response)=>{
@@ -111,7 +95,6 @@ AllProductsPagination:(val)=>{
     })
   },
 
- 
 
 
 

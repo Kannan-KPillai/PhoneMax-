@@ -21,16 +21,9 @@
                    {{/if}}
             <form action="/admin/add-category" method="POST" enctype="multipart/form-data">
                 <label for="">Category</label>
-
-                <label for="">Status</label>
-               <br> 
-                <select name="Status">
-                    <option>Choose</option>
-                    <option>In stock</option>
-                    <option>Out stock</option>
-                </select>
-
-                <input type="text" name="category" class="form-control"> 
+                 <input type="text" name="Category" class="form-control">
+                <label for="" >Offer(%)</label>
+                <input type="text" name="offer" class="form-control">
                 <label for="">Image</label>
                 <input type="file" name="Image" class="form-control"> 
                 <button type="submit" class="btn btn-success mt-4">Submit</button>

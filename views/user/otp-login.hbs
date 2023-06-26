@@ -27,16 +27,18 @@
                         <div class="col-md-6 col-lg-7 d-flex align-items-center">
                             <div class="card-body p-4 p-lg-5 text-black">
 
-                                <form action="/otp-login" method="post">
+                                <form action="/otp-success" method="post">
 
                                     <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Please enter your OTP
                                     </h5>
 
                                   
                                      <div class="form-outline mb-4">
-                                        <input type="password" name="Email" class="form-control form-control-lg "
+                                        <input type="password" name="otp" class="form-control form-control-lg "
                                             style="border-color: #231b1b;" required />
-                                        <label class="form-label" name="Email">Enter OTP</label>
+                                        <input type="text" name ="num" value="{{num}}" hidden>
+                                        <input type="text" name ="Email" value="{{Email}}" hidden>
+                                        <label class="form-label"  >Enter OTP</label>
                                         <div class="invalid-feedback">
                                             You have entered inncorect OTP.
                                         </div>

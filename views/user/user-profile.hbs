@@ -11,7 +11,7 @@
 </style>
 
 <body>
-  <section style="background-color:rgba(21, 21, 21, 1); height:640px">
+  <section style="background-color:rgba(21, 21, 21, 1); height:800px">
     <div class="container py-5" >
       <div class="row">
        <div class="col-lg-4" style="padding-top: 70px;">
@@ -22,12 +22,24 @@
       <h5 class="my-3">{{user.Name}}</h5>
       <div class="d-flex justify-content-center mb-2">
         {{!-- <a style="font-size: x-small;" href="" type="button" class="btn btn-primary ms-1 ml-2">Change Password</a> --}}
-        <a style="font-size: small;" href="#" type="button" class="btn btn-outline-primary ms-1 ml-2" data-toggle="modal"
+        {{!-- <a style="font-size: small;" href="#" type="button" class="btn btn-outline-primary ms-1 ml-2" data-toggle="modal"
           data-target="#addAddressModal">Add Address</a>
-        <a style="font-size: small;" href="/orders" type="button" class="btn btn-outline-primary ms-1 ml-2">Orders History</a>
+        <a style="font-size: small;" href="/orders" type="button" class="btn btn-outline-primary ms-1 ml-2">Orders History</a> --}}
       </div>
     </div>
   </div>
+  <div class="card" style="width: 22rem;">
+  <ul class="list-group list-group-flush">
+    {{!-- <li class="list-group-item"><a href="/updatePass" >Change Password</a></li> --}}
+      <li class="list-group-item"><a href="" type="button"data-toggle="modal"
+          data-target="#addAddressModal">Add Address</a></li>
+     <li class="list-group-item"><a href="/wallet" >Wallet</a></li>
+      <li class="list-group-item"><a href="/orders" >Order history</a></li>
+       <li class="list-group-item"><a href="/refferal-link" >Refferel Link</a></li>
+   
+  </ul>
+</div>
+
 </div>
 
         <div class="col-lg-8" style="padding-top: 70px;">
@@ -52,21 +64,6 @@
               </div>
               <hr>
               <div class="row">
-                {{!-- <div class="col-sm-3">
-                  <p class="mb-0">Phone</p>
-                </div>
-                <div class="col-sm-9">
-                  <p class="text-muted mb-0">(091) {{user.phone}}</p>
-                </div>
-              </div>
-              <hr>
-              <div class="row">
-                <div class="col-sm-3">
-                  <p class="mb-0">Mobile</p>
-                </div>
-                <div class="col-sm-9">
-                  <p class="text-muted mb-0">(091) {{user.number}}</p>
-                </div> --}}
               </div>
              
               <div class="row">
@@ -129,5 +126,5 @@
   </div>
   </form>
 </div>
-
+<div></div>
 </body>

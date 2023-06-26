@@ -112,9 +112,14 @@ body {
       </li>  
       <li class="nav-item">  
         <a class="nav-link" href="/admin/view-orders"> Order </a>  
+      </li> <li class="nav-item">  
+        <a class="nav-link" href="/admin/view-coupon"> Coupon </a>  
       </li>   
       <li class="nav-item">  
         <a class="nav-link" href="/admin/banners"> Banners </a>  
+      </li> 
+       <li class="nav-item">  
+        <a class="nav-link" href="/admin/offers"> Offers </a>  
       </li> 
         </ul>  
       </li>  
@@ -128,12 +133,12 @@ body {
 
 
 <script>  
-{{!-- $(document).ready(function() {  
+$(document).ready(function() {  
   $('.nav-link-collapse').on('click', function() {  
     $('.nav-link-collapse').not(this).removeClass('nav-link-show');  
     $(this).toggleClass('nav-link-show');  
   });  
-});    --}}
+});   
 
 $(document).ready(function() {
   $('.nav-item').on('mousedown', function(event) {
@@ -156,3 +161,4 @@ $(document).ready(function() {
 
 </script>  
 </body>
+

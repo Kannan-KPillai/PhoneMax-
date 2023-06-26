@@ -50,12 +50,12 @@
     width: 100%;
     object-fit: cover;
   }
+ 
 </style>
 
-
-
+  <div style="height:5rem;background-color: rgba(21, 21, 21, 1)"></div>
           {{!-- banner 1 --}}
-
+{{!-- <div style="background-color: rgba(21, 21, 21, 1);"> --}}
 <div style="height: 60px; background-color: rgba(21, 21, 21, 1); display: flex; align-items: center; justify-content: center;">
     <h4 style="color: white;">Buy Your Favorite Smart Phone from PhoneMax</h4>
 </div>
@@ -78,7 +78,7 @@ background-repeat:no-repeat; background-size:cover; height: 400px; width:100%">
       <div class="col-lg-3 col-md-6 mb-3">
         <div class="card" style="background-color: rgba(53, 53, 53, 1); height: 100%;">
           <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light" data-mdb-ripple-color="light">
-            <a href="/productdetails/{{this._id}}"><img src="/product-image/{{this._id}}.jpg" class="card-img-top" alt="..." /></a>
+            <a href="/productdetails/{{this._id}}"><img src="{{this.photos.[0].fileName}}" class="card-img-top" alt="..." /></a>
             <a href="#!">
               <div class="mask">
                 <div class="d-flex justify-content-start align-items-end h-100">
@@ -108,22 +108,30 @@ background-repeat:no-repeat; background-size:cover; height: 400px; width:100%">
   {{!-- smart phone categories --}}
 
 
-<div style="background-color: rgba(21, 21, 21, 1); padding-top:50px">
-<a class="ripple" href="#!" style="padding-right:30px;  padding-left:200px ">
-  <img
-    alt="example"
-    class="img-fluid rounded"
-    src="https://d2d22nphq0yz8t.cloudfront.net/88e6cc4b-eaa1-4053-af65-563d88ba8b26/https://media.croma.com/image/upload/v1684242611/Croma%20Assets/CMS/CAtegory/Mobile%20phone%20-%20C10/16-05-23/Desktop/Choose%20Your%20Type/3split_PCP_righttype_iPhone_15May2023_dfaihn.png/mxw_2048,f_auto"
-  />
-  <a class="ripple" href="#!">
-  <img
-    alt="example"
-    class="img-fluid rounded"
-    src="https://d2d22nphq0yz8t.cloudfront.net/88e6cc4b-eaa1-4053-af65-563d88ba8b26/https://media.croma.com/image/upload/v1684242611/Croma%20Assets/CMS/CAtegory/Mobile%20phone%20-%20C10/16-05-23/Desktop/Choose%20Your%20Type/3split_PCP_righttype_Android_15May2023_m5mclk.png/mxw_2048,f_auto"
-  />
-  
-</a>
-</a>
+
+<div style="background-color: rgba(21, 21, 21, 1); padding-top: 50px;">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <a class="ripple" href="#!" style="padding-right: 15px; padding-left: 15px;">
+          <img
+            alt="example"
+            class="img-fluid rounded"
+            src="https://d2d22nphq0yz8t.cloudfront.net/88e6cc4b-eaa1-4053-af65-563d88ba8b26/https://media.croma.com/image/upload/v1684242611/Croma%20Assets/CMS/CAtegory/Mobile%20phone%20-%20C10/16-05-23/Desktop/Choose%20Your%20Type/3split_PCP_righttype_iPhone_15May2023_dfaihn.png/mxw_2048,f_auto"
+          />
+        </a>
+      </div>
+      <div class="col-md-6">
+        <a class="ripple" href="#!" style="padding-right: 15px; padding-left: 15px;">
+          <img
+            alt="example"
+            class="img-fluid rounded"
+            src="https://d2d22nphq0yz8t.cloudfront.net/88e6cc4b-eaa1-4053-af65-563d88ba8b26/https://media.croma.com/image/upload/v1684242611/Croma%20Assets/CMS/CAtegory/Mobile%20phone%20-%20C10/16-05-23/Desktop/Choose%20Your%20Type/3split_PCP_righttype_Android_15May2023_m5mclk.png/mxw_2048,f_auto"
+          />
+        </a>
+      </div>
+    </div>
+  </div>
 </div>
 
 
@@ -259,7 +267,7 @@ background-repeat:no-repeat; background-size:cover; height: 400px; width:100%">
       {{!-- banner 2 --}}
 
 <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-  <ol class="carousel-indicators">
+  <ol class="carousel-indicators"> 
     <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
     <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
     <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
@@ -268,17 +276,107 @@ background-repeat:no-repeat; background-size:cover; height: 400px; width:100%">
     <li data-target="#carouselExampleIndicators" data-slide-to="{{@index}}"></li>
     {{/each}}
   </ol>
-  <div class="carousel-inner">
+  <div class="carousel-inner">  
     <div class="carousel-item active">
-      <img class="d-block w-100 carousel-img" src="https://www.thechennaimobiles.com/image/cache/catalog/HOME%20BANNER/f23-1920x630.png" alt="First slide">
+      <img class="d-block w-100 carousel-img" src="https://www.thechennaimobiles.com/image/cache/catalog/HOME%20BANNER/n2-1920x630.png" alt="First slide">
     </div>
     <!-- Add additional slide items for each banner -->
     {{#each banners}}
     <div class="carousel-item">
       <div class="d-flex justify-content-center align-items-center">
-        <img class="carousel-img" src="/banner-image/{{this._id}}.jpg" alt="Banner Image">
+        <img class="carousel-img" src="{{this.photos.[0].fileName}}" alt="Banner Image">
       </div>
     </div>
     {{/each}}
   </div>
 </div>
+
+<!-- Footer -->
+<footer class="text-center text-lg-start text-white" style="background-color: #1c2331; height:450px">
+  <!-- Section: Social media -->
+  <section class="d-flex justify-content-between p-4" style="background-color: #000000">
+    <!-- Left -->
+    <div class="me-5">
+      <span><strong>Shop Mobile Phones Online at the Best Prices in India</strong></span>
+    </div>
+    <!-- Left -->
+  </section>
+  <!-- Section: Social media -->
+
+  <!-- Section: Links -->
+  <section class="mt-5">
+    <div class="container text-center text-md-start">
+      <!-- Grid row -->
+      <div class="row mt-3">
+        <!-- Grid column -->
+        <div class="col-md-6 col-lg-4 col-xl-3 mx-auto mb-4">
+          <!-- Content -->
+          <h6 class="text-uppercase fw-bold">PhoneMax</h6>
+          <hr class="mb-4 mt-0 d-inline-block mx-auto" style="width: 60px; background-color: #7c4dff; height: 2px" />
+          <p>
+           It’s easy to get caught up in acronyms and tech specs while buying a new smartphone but no matter your budget, your usage, or your OS preference, you’ll always find the best smartphone for yourself at PhoneMax. 
+          </p>
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col-md-6 col-lg-2 col-xl-2 mx-auto mb-4">
+          <!-- Links -->
+          <h6 class="text-uppercase fw-bold">Products</h6>
+          <hr class="mb-4 mt-0 d-inline-block mx-auto" style="width: 60px; background-color: #7c4dff; height: 2px" />
+          <p>
+            <a href="#!" class="text-white">Android SmartPhones</a>
+          </p>
+          <p>
+            <a href="#!" class="text-white">Apple SmartPhones</a>
+          </p>
+          <p>
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col-md-6 col-lg-2 col-xl-2 mx-auto mb-4">
+          <!-- Links -->
+          <h6 class="text-uppercase fw-bold">Useful links</h6>
+          <hr class="mb-4 mt-0 d-inline-block mx-auto" style="width: 60px; background-color: #7c4dff; height: 2px" />
+          <p>
+            <a href="#!" class="text-white">Help And Support</a>
+          </p>
+          <p>
+            <a href="#!" class="text-white">FAQs</a>
+          </p>
+          <p>
+            <a href="#!" class="text-white">Buying Guide</a>
+          </p>
+          <p>
+            <a href="#!" class="text-white">Return Policy</a>
+          </p>
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col-md-6 col-lg-3 col-xl-3 mx-auto mb-4">
+          <!-- Links -->
+          <h6 class="text-uppercase fw-bold">Contact</h6>
+          <hr class="mb-4 mt-0 d-inline-block mx-auto" style="width: 60px; background-color: #7c4dff; height: 2px" />
+         
+          <p><i class="fas fa-envelope mr-3"></i> phonemax@.com</p>
+          <p><i class="fas fa-phone mr-3"></i> + 01 234 567 88</p>
+          <p><i class="fas fa-print mr-3"></i> + 01 234 567 89</p>
+        </div>
+        <!-- Grid column -->
+      </div>
+      <!-- Grid row -->
+    </div>
+  </section>
+  <!-- Section: Links -->
+
+  <!-- Footer Text -->
+  <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
+  Copyright @PhoneMax2023
+  </div>
+  <!-- Footer Text -->
+</footer>
+<!-- Footer -->
+
+

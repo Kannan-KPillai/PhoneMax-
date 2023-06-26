@@ -1,22 +1,24 @@
 
 <section style="background-color: rgba(21, 21, 21, 1);">
-
+<div style="height:5rem;background-color: rgba(21, 21, 21, 1)"></div>
   <div class="container py-3">
     
     {{!-- search bar  start--}}
-<div class="d-flex justify-content-end mt-3" style="padding-left: 50px;">
-    <form class="form-inline" action="/all-products" method="post">
-        <input style="width: 15rem" class="form-control mr-sm-2 d-inline" type="search" name="search" placeholder="Search by name, category" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0 d-inline" type="submit">Search</button>
-    </form>
+<div class="d-flex justify-content-between mt-3" style="padding-left: 50px;">
+  <form class="form-inline" action="/all-products" method="post">
+    <input style="width: 15rem" class="form-control mr-sm-2 d-inline" type="search" name="search" placeholder="Search by name, category" aria-label="Search">
+    <button class="btn btn-outline-success my-2 my-sm-0 d-inline" type="submit">Search</button>
+  </form>
+
+  <div class="col-auto">
+    <button id="filterButton" class="btn btn-primary">Sort By</button>
+    <div id="toggleButtons" class="btn-group" style="display: none;">
+      <button id="lowToHighButton" class="btn btn-outline-dark">Price: Low to High</button>
+      <button id="highToLowButton" class="btn btn-outline-dark">Price: High to Low</button>
+    </div>
+  </div>
 </div>
-       <div class="col">
-        <button id="filterButton" class="btn btn-primary">Filter</button>
-        <div id="toggleButtons" class="btn-group" style="display: none;">
-          <button id="lowToHighButton" class="btn btn-outline-dark">Price: Low to High</button>
-          <button id="highToLowButton" class="btn btn-outline-dark">Price: High to Low</button>
-        </div>
-      </div>
+
 {{!-- search bar end --}}
 
     <div class="row justify-content-center mb-3" style="padding-top: 3rem;">
@@ -27,7 +29,7 @@
             <div class="row">
               <div class="col-md-12 col-lg-3 col-xl-3 mb-4 mb-lg-0">
                 <div class="bg-image hover-zoom ripple rounded ripple-surface">
-                 <img src="/product-image/{{this._id}}.jpg" class="card-img-top" alt="..."></a>
+                 <img src="{{this.photos.[0].fileName}}" class="card-img-top" alt="..."></a>
                   <a href="#!">
                     <div class="hover-overlay">
                       <div class="mask"></div>
@@ -57,7 +59,7 @@
             
                 <h6 class="text-success">Free shipping</h6>
                 <div class="d-flex flex-column mt-4">
-                  <a  href="/productdetails/{{this._id}}"
+                  <a href="/productdetails/{{this._id}}"
                   class="btn btn-primary btn-sm" style="color: white;" type="button">Details</a>
                   <button class="btn btn-outline-primary btn-sm mt-2" type="button">
                     Add to wishlist
@@ -82,10 +84,97 @@
     <li class="page-item"><a class="page-link" href="/all-products?p=1">1</a></li>
     <li class="page-item"><a class="page-link" href="/all-products?p=2">2</a></li>
     <li class="page-item"><a class="page-link" href="/all-products?p=3">3</a></li>
-   
+     {{!-- <li class="page-item"><a class="page-link" href="/all-products?p=4">4</a></li> --}}
   </ul>
 </nav>
    </section>  
+<!-- Footer -->
+<footer class="text-center text-lg-start text-white" style="background-color: #1c2331; height:450px">
+  <!-- Section: Social media -->
+  <section class="d-flex justify-content-between p-4" style="background-color: #000000">
+    <!-- Left -->
+    <div class="me-5">
+      <span><strong>Shop Mobile Phones Online at the Best Prices in India</strong></span>
+    </div>
+    <!-- Left -->
+  </section>
+  <!-- Section: Social media -->
+
+  <!-- Section: Links -->
+  <section class="mt-5">
+    <div class="container text-center text-md-start">
+      <!-- Grid row -->
+      <div class="row mt-3">
+        <!-- Grid column -->
+        <div class="col-md-6 col-lg-4 col-xl-3 mx-auto mb-4">
+          <!-- Content -->
+          <h6 class="text-uppercase fw-bold">PhoneMax</h6>
+          <hr class="mb-4 mt-0 d-inline-block mx-auto" style="width: 60px; background-color: #7c4dff; height: 2px" />
+          <p>
+           It’s easy to get caught up in acronyms and tech specs while buying a new smartphone but no matter your budget, your usage, or your OS preference, you’ll always find the best smartphone for yourself at PhoneMax. 
+          </p>
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col-md-6 col-lg-2 col-xl-2 mx-auto mb-4">
+          <!-- Links -->
+          <h6 class="text-uppercase fw-bold">Products</h6>
+          <hr class="mb-4 mt-0 d-inline-block mx-auto" style="width: 60px; background-color: #7c4dff; height: 2px" />
+          <p>
+            <a href="#!" class="text-white">Android SmartPhones</a>
+          </p>
+          <p>
+            <a href="#!" class="text-white">Apple SmartPhones</a>
+          </p>
+          <p>
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col-md-6 col-lg-2 col-xl-2 mx-auto mb-4">
+          <!-- Links -->
+          <h6 class="text-uppercase fw-bold">Useful links</h6>
+          <hr class="mb-4 mt-0 d-inline-block mx-auto" style="width: 60px; background-color: #7c4dff; height: 2px" />
+          <p>
+            <a href="#!" class="text-white">Help And Support</a>
+          </p>
+          <p>
+            <a href="#!" class="text-white">FAQs</a>
+          </p>
+          <p>
+            <a href="#!" class="text-white">Buying Guide</a>
+          </p>
+          <p>
+            <a href="#!" class="text-white">Return Policy</a>
+          </p>
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col-md-6 col-lg-3 col-xl-3 mx-auto mb-4">
+          <!-- Links -->
+          <h6 class="text-uppercase fw-bold">Contact</h6>
+          <hr class="mb-4 mt-0 d-inline-block mx-auto" style="width: 60px; background-color: #7c4dff; height: 2px" />
+         
+          <p><i class="fas fa-envelope mr-3"></i> phonemax@.com</p>
+          <p><i class="fas fa-phone mr-3"></i> + 01 234 567 88</p>
+          <p><i class="fas fa-print mr-3"></i> + 01 234 567 89</p>
+        </div>
+        <!-- Grid column -->
+      </div>
+      <!-- Grid row -->
+    </div>
+  </section>
+  <!-- Section: Links -->
+
+  <!-- Footer Text -->
+  <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
+  Copyright @PhoneMax2023
+  </div>
+  <!-- Footer Text -->
+</footer>
+<!-- Footer -->
 
  
 <script>

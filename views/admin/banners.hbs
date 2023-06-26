@@ -14,7 +14,7 @@
                 <tbody>
                     {{#each banners}}
                         <tr>
-  <td><img style="width: 700px; height: 200px;" src="/banner-image/{{this._id}}.jpg" alt=""></td>
+  <td><img style="width: 700px; height: 200px;" src="{{this.photos.[0].fileName}}" alt=""></td>
 <td>
   <a href="/admin/delete-banner/{{this._id}}" class="btn btn-danger btn-sm" onclick="confirmDelete('{{this._id}}'); return false;">Delete</a>
 </td>

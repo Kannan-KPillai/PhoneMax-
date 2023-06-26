@@ -29,13 +29,11 @@
 
                 <label for="">Price</label>
                 <input type="text" name="price" class="form-control" value="{{prodcut.price}}"> 
-
                 <label for="">Description</label>
                 <input type="text" name="description" class="form-control" value="{{product.description}}"> 
-
                 <label for="">Image</label>
-                <img src="/product-image/{{product._id}}.jpg" alt="" style="width:100px; height:auto" id="imgView">
-                <input type="file" name="Image" class="form-control" onchange="viewImage(event)"> 
+                <img src="{{this.fileName}}" alt="" style="width:100px; height:auto" id="imgView">
+                <input type="file" name="Image" class="form-control"  accept="image/*" multiple  onchange="viewImage(event)"> 
                 <button type="submit" class="btn btn-success mt-4">Submit</button>
             </form>
 

@@ -6,6 +6,7 @@
     padding-top: 50px;
   }
 </style>
+  <div style="height:3rem;background-color: rgba(21, 21, 21, 1)"></div>
 <div class="row">
   <!-- Existing Addresses Section -->
   <div class="col-md-6 mb-4" style="padding-left: 50px;">
@@ -194,7 +195,7 @@
             <label class="form-label" style="color: white;">Mobile Number</label>
             <input type="text" name="userId" id="" value="{{user._id}}" hidden>
           </div>
-          
+         
           <div class="col-md-6 mb-4 ms-auto">
             <div class="card mb-4">
               <div class="card-header py-3" style="background-color: rgba(21, 21, 21, 1);">
@@ -229,7 +230,7 @@
                         <p class="mb-0">(including GST)</p>
                       </strong>
                     </div>
-                    <span><strong>₹{{total}}</strong></span>
+                    <span><strong>₹{{user.pAmount}}</strong></span>
                   </li>
                 </ul>
 
@@ -251,8 +252,7 @@
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
- 
-  $("#checkout-form").submit((e) => {
+ $("#checkout-form").submit((e) => {
   e.preventDefault();
   $.ajax({
     url: '/delivery-address',
@@ -260,7 +260,11 @@
     data: $('#checkout-form').serialize(),
     success: (response) => {
       if (response.codSuccess) {
-        swal("Order Placed", "Your order has been successfully placed!", "success").then(() => {
+        Swal.fire({
+          title: "Order Placed",
+          text: "Your order has been successfully placed!",
+          icon: "success"
+        }).then(() => {
           location.href = '/order-success';
         });
       } else {
@@ -269,6 +273,7 @@
     }
   });
 });
+
 
 
   function razorpayPayment (order){
@@ -302,8 +307,7 @@
 }
 
 
-
-  function verifyPayment(payment, order) {
+function verifyPayment(payment, order) {
   $.ajax({
     url: '/verify-payment',
     data: {
@@ -313,15 +317,25 @@
     method: 'post',
     success: (response) => {
       if (response.status) {
-        swal("Payment Verified", "Payment successfully verified!", "success").then(() => {
+        Swal.fire({
+          title: "Payment Verified",
+          text: "Payment successfully verified!",
+          icon: "success"
+        }).then(() => {
           location.href = '/order-success';
         });
       } else {
-        swal("Payment Failed", "Payment verification failed.", "error");
+        Swal.fire({
+          title: "Payment Failed",
+          text: "Payment verification failed.",
+          icon: "error"
+        });
       }
     }
   });
 }
+
+
 
 </script>
 

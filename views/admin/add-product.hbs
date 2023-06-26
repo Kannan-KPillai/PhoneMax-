@@ -94,14 +94,14 @@
             </div>
                  <label for="">Image</label>  
 <div>
-  <input type="file" id="imageInput" name="Image" class="form-control-file" accept="image/*" required>
-  <img id="imagePreview" src="#" alt="Image Preview" style="max-width: 100%; height: auto; display: none;">
-  <input type="hidden" id="croppedImage" name="croppedImage">
+  <input type="file" id="imageInput" name="Image" class="form-control-file" multiple accept="image/*" required>
+  {{!-- <img id="imagePreview" src="#" alt="Image Preview" style="max-width: 100%; height: auto; display: none;"> --}}
+  {{!-- <input type="hidden" id="croppedImage" name="croppedImage"> --}}
   
 </div>
 
             <div class="text-center">
-              <button type="submit" class="btn btn-success mt-4">Submit</button>
+              <button type="submit" class="btn btn-success mt-4" id="submitBtn">Submit</button>
             </div>
           </form>
         </div>
@@ -109,6 +109,32 @@
     </div>
   </section>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Get the submit button element
+    const submitBtn = document.getElementById('submitBtn');
+
+    // Add click event listener to the submit button
+    submitBtn.addEventListener('click', function(event) {
+      // Prevent default form submission
+      event.preventDefault();
+
+      // Show SweetAlert with success message
+      Swal.fire({
+        title: 'Success!',
+        text: 'Product added successfully',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 1500
+      }).then(() => {
+        // After the SweetAlert is closed, submit the form
+        submitBtn.closest('form').submit();
+      });
+    });
+  });
+</script>
+{{!-- 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
@@ -154,6 +180,6 @@
       });
     });
   </script>
-</body>
+</body> --}}
 
 </html>

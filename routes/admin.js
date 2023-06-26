@@ -3,8 +3,12 @@ var router = express.Router();
 var productHelpers= require('../helpers/product-helpers')
 const adminHelpers = require('../helpers/admin-helpers')
 var categoryHelpers = require('../helpers/category-helpers')
-const multer = require("multer");
-const fs = require('fs')
+var couponHelpers= require('../helpers/coupon-helpers')
+const multer = require('multer');
+const upload = multer({ dest:'public/images'});
+const path = require("path");
+const fs = require("fs");
+
 const { adminLoginGet, adminLoginPost, AdminLogoutGet, }= require('../controller/admin-controller');
 const { log } = require('console');
 
@@ -49,24 +53,44 @@ router.get('/add-product',verifyLogin,async function(req,res){
 
 
 // ********* Product add edit and delete *********** //
-router.post('/add-product', (req, res) => {
-  console.log(req.body);
-  console.log(req.files.Image);
-
-  productHelpers.addProduct(req.body, (insertedId) => {
-    let image = req.files.Image;
-    image.mv('./public/product-image/' + insertedId + '.jpg', (err) => {
-      if (!err) {
-        res.redirect("/admin");
-      } else {
-        console.log(err);
-        res.status(500).send("Error occurred while uploading the image");
-      }
-    });
-  });
+router.post("/add-product", upload.array("Image", 4), async (req, res) => {
+  console.log(req.files)
+  
+ const{
+   name,
+   category,   
+   price,
+   description 
+   
+} = req.body;  
+console.log(req.body)
+console.log(req.file)
+  const photos=req.files.map((file)=>{
+     const oldPath = `${file.path}`;
+     const newPath = `${file.path}.png`;
+     if(fs.existsSync(oldPath)){
+       fs.rename(oldPath,newPath,function(err){
+         if(err)throw err;
+         console.log('file renamed')
+       })
+     }else{
+       console.log(('not renamed'));
+     }
+     return {
+       // id:  path.basename(newPath),
+       title: file.originalname,     
+        fileName: newPath.replace(/public/gi,"")
+       //  filepath: file.path.replace(/views/gi,"")
+     };
+   })
+   console.log(photos)
+ productHelpers.addProduct({name:name,category:category,price:price,description:description,photos:photos}, (id) => {
+   req.session.admin.loggedIn=true
+   res.redirect('/admin')
+ 
+ })
 });
-
-
+  
 
 // Delete Product get method
 router.get('/delete-product/:id',verifyLogin,(req,res)=>{
@@ -84,26 +108,37 @@ router.get('/edit-product/:id',async(req,res)=>{
 })
 
 // ********* edit product post method
-router.post('/edit-product/:id', async (req, res) => {
-  try {
-    let insertedId = req.params.id;
-    await productHelpers.updateProduct(req.params.id, req.body);
-
-    if (req.files && req.files.image) {
-      let image = req.files.image;
-      image.mv('./public/product-image/' + insertedId + '.jpg', (err) => {
-        if (err) {
-          console.log(err);
-        }
+router.post("/edit-product/:id",verifyLogin, upload.array("Image", 4), (req, res) => {
+  const { name, category, price, description } = req.body;
+  const photos = req.files.map((file) => {
+    const oldPath = `${file.path}`;
+    const newPath = `${file.path}.png`;
+    if (fs.existsSync(oldPath)) {
+      fs.rename(oldPath, newPath, function (err) {
+        if (err) throw err;
       });
+    } else {
     }
-    res.redirect('/admin');
-  } catch (error) {
-    console.log(error);
-    res.status(500).send("Error occurred while editing the product");
-  }
-});
+    return {
+      id: path.basename(newPath),
+      title: file.originalname,
+      fileName: newPath.replace(/public/gi,"")
+    };
+  });
+  // let caName = name.toUpperCase();
 
+  productHelpers
+    .updateProduct(req.params.id, {
+      name: name,
+      category: category,
+      price: price,
+      description: description,
+      photos: photos,
+    })
+    .then(() => {
+      res.redirect("/admin/adminLogin");
+    });
+});
 
 //*************  Admin Login  get method **********
 router.get("/adminLogin",adminLoginGet)
@@ -142,8 +177,7 @@ router.get('/unblock-user/:id',verifyLogin,(req,res)=>{
   })
 })
 
-// Category management get methods **********
-
+//*********** Category management get methods **********//
 router.get('/hide-category/:id',verifyLogin,(req,res)=>{
   let catId = req.params.id;
   categoryHelpers.hideCategory(catId).then(()=>{
@@ -175,28 +209,43 @@ router.get('/add-category',verifyLogin, function(req,res){
 
 
 // Category management post methods **************
-router.post('/add-category',verifyLogin, (req, res) => {
-
-  categoryHelpers.addCategory(req.body).then((data) => {
-      if(data){
-        console.log(data);
-        let image= req.files.Image;
-    image.mv('./public/category-image/' + data.insertedId + '.jpg', (err) => {
-      if (!err) {
-        res.render("admin/view-category");
-      } else {
-        console.log(err);
+router.post('/add-category',verifyLogin,upload.array('Image',1),async(req, res) => {
+  const{
+    Category,  
+    offer,
+ } = req.body;
+ console.log(req.body)
+ console.log(req.files);
+   const photos=req.files.map((file)=>{
+      const oldPath = `${file.path}`;
+      const newPath = `${file.path}.png`;
+      if(fs.existsSync(oldPath)){
+        fs.rename(oldPath,newPath,function(err){
+          if(err)throw err;
+        })
+      }else{
+        console.log(('not renamed'));
       }
-    });
-  }else{
-       req.session.catError = "Category already exists"
-       res.redirect('/admin/add-category')
-  }
-  });
-});
+      return {
+        title: file.originalname,        
+         fileName: newPath.replace(/public/gi,"")
+      };
+    })
+    console.log(photos)
+  categoryHelpers.addCategory({category:Category,offer:offer,photos:photos}).then((data)=>{
+   if(data)
+   { 
+     res.redirect('/admin/view-category');
+   }
+   else{
+     req.session.catError = "Category Already Exist";
+     res.redirect('/admin/add-category')
+   }  
+   })
+  })
 
 
-//   Delete category get methods **************
+//   Delete category get methods **************//
 router.get('/delete-category/:id',verifyLogin,(req,res)=>{
   let catId = req.params.id 
   categoryHelpers.deleteCategory(catId).then((response)=>{
@@ -205,26 +254,13 @@ router.get('/delete-category/:id',verifyLogin,(req,res)=>{
 })
 
 
-
+//************ edit-category get method *******//
 router.get('/edit-category/:id',async(req,res)=>{
   
   let category = await categoryHelpers.getCategoryDetails(req.params.id)
   console.log(category);
   res.render('admin/edit-category',{category,admin:true})
 })
-
-// router.post('/edit-category/:id', (req,res)=>{
-//    let insertedId= req.params.id
-//   categoryHelpers.updateCategory(req.params.id, req.body).then(()=>{
-//     res.redirect('/admin')
-//     if (req.files.image){
-//       let image = req.files.image
-//       image.mv('./public/category-image/'+insertedId+'.jpg')
-        
-//     }
-//    })
-// })
-
 
 // edit category post methods *************
 router.post('/edit-category/:id', async (req, res) => {
@@ -240,7 +276,7 @@ router.post('/edit-category/:id', async (req, res) => {
         }
       });
     }
-    res.redirect('/admin');
+    res.redirect('/admin/view-category');
   } catch (error) {
     console.log(error);
     res.status(500).send("Error occurred while editing the category");
@@ -251,8 +287,6 @@ router.post('/edit-category/:id', async (req, res) => {
 
 //*********view-orders */
 
-
-
 router.get('/view-orders',async(req,res)=>{
   let orders = await adminHelpers.getAllUsersOrders()
   res.render('admin/view-orders',{admin:true,orders})
@@ -262,6 +296,7 @@ router.get("/status-change", async (req, res) => {
   let id = req.query.id;
   let status = req.query.st
   adminHelpers.cancelOrder(id,status);
+  adminHelpers.returnOrder(id,status);
   res.redirect("/admin/view-orders");
 });
 
@@ -280,18 +315,49 @@ router.get('/addBanner', (req, res) => {
 
 //********* banner management post ******/
 router.post('/addBanner', (req, res) => {
-  adminHelpers.addBanner(req.body).then((id) => {
-    let image = req.files.Image;
-    image.mv('./public/banner-image/' + id + '.jpg', (err) => {
-      if (!err) {
-        res.redirect('/admin/banners');
-      } else {
-        console.log(err);
+  upload.array('Image')(req, res, async (err) => {
+    if (err instanceof multer.MulterError) {
+      // A Multer error occurred during file upload
+      console.log(err);
+      res.redirect('/admin/addBanner');
+    } else if (err) {
+      // An unknown error occurred during file upload
+      console.log(err);
+      res.redirect('/admin/addBanner');
+    } else {
+      if (!req.files || req.files.length === 0) {
+        // Image file is not selected
+        console.log('No image selected');
+        res.redirect('/admin/addBanner');
+        return;
+      }
+
+      const photos = req.files.map((file) => {
+        const oldPath = file.path;
+        const newPath = `${file.path}.png`;
+        if (fs.existsSync(oldPath)) {
+          fs.renameSync(oldPath, newPath);
+          console.log('File renamed');
+        } else {
+          console.log('File not renamed');
+        }
+        return {
+          title: file.originalname,
+          fileName: newPath.replace(/public/gi, ''),
+        };
+      });
+
+      try {
+        const insertedId = await adminHelpers.addBanner({ photos: photos });
+        req.session.admin.loggedIn = true;
+        res.redirect('/admin/addBanner');
+      } catch (error) {
+        console.log(error);
         res.redirect('/admin/addBanner');
       }
-    });
+    }
   });
-});
+})
 
 //*********** add-banner get **********/
 
@@ -320,6 +386,105 @@ router.get('/dashboard',verifyLogin,async(req,res)=>{
   let totalSelling = await adminHelpers.getSellingProductInEachMonth()
   res.render('admin/dashboard',{admin:true,orders,users,totalUsers,totalProducts,totalAmount,paymentCounts,totalSelling})
 })
+
+
+//*************coupon get method *************/
+router.get('/view-coupon',verifyLogin,(req,res)=>{
+  let admin = req.session.admin
+  couponHelpers.getCoupons().then((response) => {
+    res.render("admin/view-coupon", { response,admin });
+  });
+}),
+
+//*********** add coupon get method ************/
+router.get('/add-coupon',verifyLogin,(req,res)=>{
+  let admin = req.session.admin
+    res.render("admin/add-coupon",{admin});
+  }),
+
+
+  //************add coupon post method ***********/
+  router.post('/add-coupon',verifyLogin,(req,res)=>{
+    req.body.couponCode = req.body.couponCode.toUpperCase()
+    req.body.discount = parseInt(req.body.discount)
+    req.body.maxPurchase = parseInt(req.body.maxPurchase)
+
+    couponHelpers.addcoupon(req.body).then((response) => {
+      res.json({ response });
+    })
+  });
+   
+   
+  //**************** edit-coupon get method ******/
+  router.get('/edit-coupon/:id',verifyLogin,(req,res)=>{
+    let id = req.params.id;
+      couponHelpers.getOneCoupon(id).then((coupon)=>{
+        res.render('admin/edit-coupon', {coupon})
+      })
+    })
+
+    //************ edit-coupon post method*********** */
+    router.post('/edit-coupon',(req,res)=>{
+      let couponCode = req.body.couponCode.toUpperCase()
+      let discount = parseInt(req.body.discount)
+      let maxPurchase = parseInt(req.body.maxPurchase)
+      let id = req.body.id
+  
+      let data = {
+        couponCode: couponCode,
+        expiryDate: req.body.expiryDate,
+        discount: discount,
+        maxPurchase: maxPurchase
+      }
+      couponHelpers.editCoupon(id,data).then((response) => {
+        res.json({ response });
+      });
+    })
+
+    //************delete coupon post method *************/
+    router.post('/delete-coupon',verifyLogin,(req,res)=>{
+      let id = req.body.id
+      console.log(req.body)
+      couponHelpers.deleteCoupon(id).then((response)=>{
+        res.json({response})
+  })
+  })
+
+  // //************offers get method ************//
+  router.get('/offers',verifyLogin,async(req, res) => {
+    let admin = req.session.admin
+   let category= await categoryHelpers.getAllCategory()
+    res.render('admin/offers',{admin:true,category});
+    
+  })
+  
+  //**************offers post method ****************/
+// router.post('/offers/:id', async (req, res) => {
+//   let catName = req.params.category
+//   let offerPer = req.body.offerPercentage
+//   await productHelpers.findProCat(catName, offerPer).then((response)=> {
+//     res.redirect('/admin/offers')
+//   })
+// })
+router.post('/offers/:id',(req, res) => {
+  try {
+    console.log(req.body)
+    const catName = req.params.id;
+    const offerPer = req.body.offerPercentage;
+    console.log(offerPer + "##############");
+    productHelpers.findProCat(catName, offerPer);
+    res.redirect('/admin/offers');
+  } catch (error) {
+    console.error(error);
+    res.redirect('/admin/error');
+  }
+});
+
+
+
+
+
+
 
 
 

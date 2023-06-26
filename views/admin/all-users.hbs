@@ -63,9 +63,12 @@
           <td>{{this.Email}}</td>
           <td>
             {{#if this.isBlocked}}
-           <a href="/admin/unblock-user/{{this._id}}" class="btn btn-primary btn-block" onclick="return confirm('Are you sure you want to unblock the user {{this.Name}}?')">Unblock</a>
+           {{!-- <a href="/admin/unblock-user/{{this._id}}" class="btn btn-primary btn-block" onclick="return confirm('Are you sure you want to unblock the user {{this.Name}}?')">Unblock</a> --}}
+            <a href="/admin/unblock-user/{{this._id}}" class="btn btn-primary btn-block unblock-btn">Unblock</a>
+
 {{else}}
-<a href="/admin/block-user/{{this._id}}" class="btn btn-danger btn-block" onclick="return confirm('Are you sure you want to block the user {{this.Name}}?')">Block</a>
+            {{!-- <a href="/admin/block-user/{{this._id}}" class="btn btn-danger btn-block" onclick="return confirm('Are you sure you want to block the user {{this.Name}}?')">Block</a> --}}
+            <a href="/admin/block-user/{{this._id}}" class="btn btn-danger btn-block block-btn">Block</a>
 
             {{/if}}
           </td>
@@ -110,4 +113,50 @@
 
 </script>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const unblockButtons = document.querySelectorAll('.unblock-btn');
+    const blockButtons = document.querySelectorAll('.block-btn');
+
+    unblockButtons.forEach(function (button) {
+      button.addEventListener('click', function (event) {
+        event.preventDefault();
+        const userName = this.parentNode.parentNode.querySelector('td:nth-child(2)').textContent;
+
+        Swal.fire({
+          icon: 'question',
+          title: 'Unblock User',
+          text: `Are you sure you want to unblock the user ${userName}?`,
+          showCancelButton: true,
+          confirmButtonText: 'Unblock',
+          cancelButtonText: 'Cancel'
+        }).then(function (result) {
+          if (result.isConfirmed) {
+            window.location.href = button.href;
+          }
+        });
+      });
+    });
+
+    blockButtons.forEach(function (button) {
+      button.addEventListener('click', function (event) {
+        event.preventDefault();
+        const userName = this.parentNode.parentNode.querySelector('td:nth-child(2)').textContent;
+
+        Swal.fire({
+          icon: 'question',
+          title: 'Block User',
+          text: `Are you sure you want to block the user ${userName}?`,
+          showCancelButton: true,
+          confirmButtonText: 'Block',
+          cancelButtonText: 'Cancel'
+        }).then(function (result) {
+          if (result.isConfirmed) {
+            window.location.href = button.href;
+          }
+        });
+      });
+    });
+  });
+</script>
 

@@ -4,15 +4,17 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+const bodyParser = require('body-parser');
 var userRouter = require('./routes/user');
 var adminRouter = require('./routes/admin');
 var hbs= require('express-handlebars')
 var app = express();
-var fileUpload= require('express-fileupload')
+// var fileUpload= require('express-fileupload')
 var db= require('./config/connection');
 var session = require('express-session')
 var handlebars = require('handlebars');
 var chartjs = require('chart.js');
+require('dotenv').config();
 
 const { log } = require('console');
 // view engine setup
@@ -24,9 +26,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(fileUpload());
+// app.use(fileUpload());
 app.use(session({secret:"Key", cookie:{maxAge:60000000}}))
-
 db.connect((err)=>{
   if(err) console.log("Connection Error");
   else
@@ -40,6 +41,10 @@ app.use('/admin', adminRouter);
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 
 // error handler

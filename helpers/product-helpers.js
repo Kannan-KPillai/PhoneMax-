@@ -49,7 +49,7 @@ module.exports={
                     description:proDetails.description,
                     price:proDetails.price,
                     category:proDetails.category,
-                    images:proDetails.images
+                    photos:proDetails.photos,
                 }
             }).then((response)=>{
                 resolve()
@@ -92,9 +92,30 @@ module.exports={
         })
       },
 
+     
+      findProCat: async (catName, offerPer) => {
+        try {
+          const products = await db.get()
+            .collection(collection.PRODUCT_COLLECTION)
+            .find({ category: catName })
+            .toArray();
+      
+          const updatedProducts = products.map((product) => {
+            product.OfferPrice = product.price - (product.price * offerPer) / 100;
+            return product;
+          });
+      
+          return updatedProducts;
+        } catch (error) {
+          throw error;
+        }
+      },
+      
 
 
 
 
 
-    }
+
+
+}

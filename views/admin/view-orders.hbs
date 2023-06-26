@@ -69,16 +69,21 @@
         
          <td>
                         {{#if (eq this.status "placed")}}
-                        <a href="/admin/status-change?id={{this._id}}&&st=Shipped" class="btn btn-success btn-block"
-                            onclick="return confirm('Are you want to place shipped ?')">Shipped</a>
+                        {{!-- <a href="/admin/status-change?id={{this._id}}&&st=Shipped" class="btn btn-success btn-block"
+                            onclick="return confirm('Are you want to place shipped ?')">Shipped</a> --}}
+                            <button class="btn btn-success btn-block shipped-btn" data-id="{{this._id}}" data-status="Shipped">Shipped</button>
+
                             {{/if}}
                           {{#if (eq this.status "Shipped")}}  
-                        <a href="/admin/status-change?id={{this._id}}&&st=Delivered" class="btn btn-success btn-block"
-                            onclick="return confirm('Are you want to place delivered ?')">Delivered</a>
+                        {{!-- <a href="/admin/status-change?id={{this._id}}&&st=Delivered" class="btn btn-success btn-block"
+                            onclick="return confirm('Are you want to place delivered ?')">Delivered</a> --}}
+                            <button class="btn btn-success btn-block delivered-btn" data-id="{{this._id}}" data-status="Delivered">Delivered</button>
+
                             {{/if}}
                               {{#if (nteq this.status "Cancelled")}} 
                         {{!-- <a href="/admin/status-change?id={{this._id}}&&st=Cancelled" class="btn btn-danger btn-block"
                             onclick="return confirm('Are you want to cancel ?')">Cancel</a> --}}
+                            {{!-- <button class="btn btn-danger btn-block cancel-btn" data-id="{{this._id}}" data-status="Cancelled">Cancel</button> --}}
                             {{/if}}
                     </td>
       </tr>
@@ -128,3 +133,70 @@
 </script>
 
 
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const shippedButtons = document.querySelectorAll('.shipped-btn');
+    const deliveredButtons = document.querySelectorAll('.delivered-btn');
+    const cancelButtons = document.querySelectorAll('.cancel-btn');
+
+    shippedButtons.forEach(function (button) {
+      button.addEventListener('click', function () {
+        const orderId = button.getAttribute('data-id');
+        const status = button.getAttribute('data-status');
+
+        Swal.fire({
+          icon: 'question',
+          title: 'Place Shipped',
+          text: 'Are you sure you want to place this order as Shipped?',
+          showCancelButton: true,
+          confirmButtonText: 'Shipped',
+          cancelButtonText: 'Cancel'
+        }).then(function (result) {
+          if (result.isConfirmed) {
+            window.location.href = `/admin/status-change?id=${orderId}&&st=${status}`;
+          }
+        });
+      });
+    });
+
+    deliveredButtons.forEach(function (button) {
+      button.addEventListener('click', function () {
+        const orderId = button.getAttribute('data-id');
+        const status = button.getAttribute('data-status');
+
+        Swal.fire({
+          icon: 'question',
+          title: 'Place Delivered',
+          text: 'Are you sure you want to place this order as Delivered?',
+          showCancelButton: true,
+          confirmButtonText: 'Delivered',
+          cancelButtonText: 'Cancel'
+        }).then(function (result) {
+          if (result.isConfirmed) {
+            window.location.href = `/admin/status-change?id=${orderId}&&st=${status}`;
+          }
+        });
+      });
+    });
+
+    cancelButtons.forEach(function (button) {
+      button.addEventListener('click', function () {
+        const orderId = button.getAttribute('data-id');
+        const status = button.getAttribute('data-status');
+
+        Swal.fire({
+          icon: 'question',
+          title: 'Cancel Order',
+          text: 'Are you sure you want to cancel this order?',
+          showCancelButton: true,
+          confirmButtonText: 'Cancel',
+          cancelButtonText: 'Keep'
+        }).then(function (result) {
+          if (result.isConfirmed) {
+            window.location.href = `/admin/status-change?id=${orderId}&&st=${status}`;
+          }
+        });
+      });
+    });
+  });
+</script>

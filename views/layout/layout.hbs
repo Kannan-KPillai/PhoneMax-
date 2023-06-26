@@ -29,16 +29,23 @@
     {{else if user}}
     {{>user-header}}
     
+
     {{else if guest}}    
     {{>user-header}}
     {{else}}
 
     {{/if}}
     {{{body}}}
-    {{>user-footer}}
 
-
-
+{{!-- {{#if user}}
+{{> user-footer}}
+{{else if guest}}
+{{> user-footer}}
+{{/if}}
+     --}}
+     
+ {{!--++++++++++++++ image zoom  +++++++++++++++--}}
+<script src="https://unpkg.com/js-image-zoom@0.7.0/js-image-zoom.js" type="application/javascript"></script>
 
 {{!-- ***************image crop ****************** --}}
     
@@ -48,9 +55,9 @@
 
    {{!-- ******************** sweet alert ******************* --}}
 
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
  
 
   

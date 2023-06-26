@@ -116,6 +116,12 @@ blockUser:(userId)=>{
          resolve()
        })
     },
+    returnOrder:(orderId,status)=>{
+      new Promise(async (resolve, reject) => {
+       await db.get().collection(collection.ORDER_COLLECTION).updateOne({ _id: objectId(orderId) }, { $set: { 'status': status } })
+       resolve()
+     })
+  },
 
   addBanner: (banner) => {
     return new Promise(async (resolve, reject) => {

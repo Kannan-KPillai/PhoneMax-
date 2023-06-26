@@ -15,65 +15,117 @@ var instance = new Razorpay({
 
 
 module.exports={
-    doSignup: (userData) => {
-        return new Promise(async (resolve, reject) => {
-          let userExist = await db.get().collection(collection.USER_COLLECTION).findOne({Email:userData.Email})
-         
-          if (!userData.Password || userData.Password.trim() === '') {
-            reject(new Error('Password field is required'));
-            return;
-          }
-    
-          try {
-            userData.Password = await bcrypt.hash(userData.Password, 10);
-            const data = await db.get().collection(collection.USER_COLLECTION).insertOne(userData);
-            resolve(data);
-          } catch (err) {
-            reject(err);
-          }
-        });
-        },
-        doLogin:(userData)=>{
+  // doSignup: (userData) => {
+  //   return new Promise(async (resolve, reject) => {
+  //     let userExist = await db
+  //       .get()
+  //       .collection(collection.USER_COLLECTION)
+  //       .findOne({ Email: userData.Email });
+  //     if (!userExist) {
+  //       resolve(userExist)
+  //     } else {
+  //       resolve(1);
+  //     }
+  //   });
+  // },
+  doSignup: (userData) => {
+    return new Promise(async (resolve, reject) => {
+      let userExist = await db
+        .get()
+        .collection(collection.USER_COLLECTION)
+        .findOne({ Email: userData.Email });
+      let numExist = await db
+        .get()
+        .collection(collection.USER_COLLECTION)
+        .findOne({ number: userData.number });
+        
+      if (userExist) {
+        resolve(1); // Email already exists
+      }  if (numExist) {
+        resolve(2); // Number already exists
+      } else {
+        resolve(null); // Neither email nor number exists
+      }
+    });
+  },
+  
+  
+   doLogin:(userData)=>{
             return new Promise(async(resolve,reject)=>{
                 let loginStatus= false;
                 let response={};
                 let user=await db.get().collection(collection.USER_COLLECTION).findOne({Email:userData.Email})
                 
                 if(user){
+
                   if(!user.isBlocked){
                     bcrypt.compare(userData.Password,user.Password).then((status)=>{
 
-                        if(status){
-                            console.log("login success");
+                        if(status){                       
                             response.user=user
                             response.status= true
                             resolve(response)
                         }else{
-                            console.log("login failed");
                             resolve({status:false})
                         }
                     })
                 }else{
-                    console.log('You are Blocked');
                     resolve(1)
                 }
               }else{
-                console.log("Loginn Failed 2")
                 resolve({status:false}) 
               }
+              
             })
         },
+   doCheckIn:(userData)=>{
+    return new Promise(async(resolve,reject)=>{
+      let loginStatus= false;
+      let response={};
+      let user=await db.get().collection(collection.USER_COLLECTION).findOne({Email:userData.Email})
+      
+      if(user){
+                  
+        if(!user.isBlocked){               
+          response.user=user
+          response.status= true
+          resolve(response)    
+        }else{
+            resolve(1)
+        }
+    }else{
+      resolve({status:false}) 
+    }
+    
+  })
 
-
+   },
+        addUser:(userData) =>{
+          return new Promise(async (resolve) => {
+              if (!userData.Password || userData.Password.trim() === "") {
+                reject(new Error("Password field is required"));
+                return;
+              }
+      
+              try {
+                userData.Password = await bcrypt.hash(userData.Password, 10);
+                const data = await db
+                  .get()
+                  .collection(collection.USER_COLLECTION)
+                  .insertOne(userData);
+                resolve(data);
+              } catch (err) {
+                reject(err);
+              }
+          })
+        },
 
   doMailVarify: (userEmail) => {
     return new Promise(async (resolve, reject) => {
       await db.get().collection(collection.USER_COLLECTION).updateOne({ email: userEmail }, { $set: { isBlocked: true } }, (err, result) => {
-        if (err) {
-         
+        if (err) {         
           res.status(500).send("Error blocking")
         } else {
-
           resolve()
         }
       })
@@ -85,10 +137,9 @@ module.exports={
     return new Promise(async (resolve, reject) => {
       await db.get().collection(collection.USER_COLLECTION).updateOne({ otp: userOtp.otp }, { $set: { isBlocked: false } }, (err, result) => {
         if (err) {
-    
+   
           res.status(500).send("Error blocking")
-        } else {
-          
+        } else {        
           resolve("success")
           alert("Account successfully created")
         }
@@ -98,14 +149,10 @@ module.exports={
   },
 
   doMailCheck: (userOtp) => {
-
     return new Promise(async (resolve, reject) => {
       let response = {}
       let getOtp = await db.get().collection(collection.USER_COLLECTION).findOne({ otp: userOtp.otp })
-
-
       if (getOtp) {
-
         response.status = true
         resolve(response)
       }
@@ -118,14 +165,11 @@ module.exports={
   },
 
   insertOtp: (userData, userotp) => {
-
     return new Promise(async (resolve, reject) => {
       await db.get().collection(collection.USER_COLLECTION).updateOne({ Email: userData.Email }, { $set: { otp: userotp } }, (err, result) => {
-        if (err) {
-          
+        if (err) {      
           res.status(500).send("Error blocking")
-        } else {
-          console.log("otp set cheythu")
+        } else {      
           resolve("success")
         }
       })
@@ -271,8 +315,7 @@ module.exports={
       try {
         let total = await db.get().collection(collection.CART_COLLECTION).aggregate([
           // aggregation pipeline stages
-  
-  {
+         {
             $match:{user:ObjectId(userId)}
           },
           {
@@ -342,7 +385,8 @@ module.exports={
 
   placeOrder:(order,products,total)=>{
     return new Promise((resolve,reject)=>{
-      
+      const currDate = new Date()
+      const dateString = currDate.toLocaleDateString()
       let status = order['payment-method']==='COD'?'placed' : 'pending'
       let orderObj = {
         deliveryDetails:{
@@ -356,6 +400,7 @@ module.exports={
         products:products,
         totalAmount:total,
         status:status,
+        pDate:dateString,
         date: new Date()
       }
         db.get().collection(collection.ORDER_COLLECTION).insertOne(orderObj).then((response)=>{
@@ -372,11 +417,20 @@ module.exports={
      resolve()
    })
 },
-
+   returnOrder:(orderId,status)=>{
+     return new Promise(async(resolve,reject)=>{
+    await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id: ObjectId(orderId)}, {$set:{'status':status } })
+    resolve()
+  })
+},
   getCartProductList:(userId)=>{
     return new Promise(async(resolve,reject)=>{
       let cart= await db.get().collection(collection.CART_COLLECTION).findOne({user:ObjectId(userId)})
-          resolve(cart.products)
+      if(cart.products){
+        resolve(cart.products)
+      }else{
+        resolve(0)
+      }
     })
   },
 
@@ -387,14 +441,22 @@ module.exports={
     })
   },
 
-
-  getUserOrders:(userId)=>{
-    return new Promise(async(resolve,reject)=>{     
-      let orders=await db.get().collection(collection.ORDER_COLLECTION).find({userId:ObjectId(userId)}).toArray()     
-      resolve(orders)
-    })
+  getUserOrders: (userId) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let orders = await db
+          .get()
+          .collection(collection.ORDER_COLLECTION)
+          .find({ userId: ObjectId(userId) })
+          .sort({ _id: -1 }) // Sort by descending order of _id to get the latest orders first
+          .toArray();
+        resolve(orders);
+      } catch (error) {
+        reject(error);
+      }
+    });
   },
-
+  
   getOrderProducts:(orderId)=>{
     return new Promise(async(resolve,reject)=>{
       let orderItems = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
@@ -562,16 +624,6 @@ getBanners: () => {
   });
 },
 
-// getUserByEmail:(email)=>{
-//   return new Promise(async(resolve,reject)=>{
-//     try{
-//       const user= await db.get().collection(collection.USER_COLLECTION).findOne({email})
-//       resolve(user)
-//     }catch(error){
-//       reject(error)
-//     }    
-//   })
-// },
 getUserByEmail: async (email) => {
   try {
     const user = await db.get().collection(collection.USER_COLLECTION).findOne({ Email: email });
@@ -593,11 +645,180 @@ doUpdatePassword:(userId,newPassword)=>{
       reject(error)
     }
   })
+},
+checkNumber: (userData) => {
+  return new Promise(async (resolve, reject) => {
+    let response = {};
+    let user = await db
+      .get()
+      .collection(collection.USER_COLLECTION)
+      .findOne({ number: userData.number });
+
+    if (user) {
+      if (!user.isBlocked) {
+        if (userData.number === user.number) {
+          response.user = user;
+          response.status = true;
+          resolve(response);
+        } else {
+          resolve({ status: false });
+        }
+      } else {
+        resolve({ status: false });
+      }
+    } else {
+      resolve({ status: false });
+    }
+  });
+},
+
+// replaceOtp:(num,newOtp)=>{
+//       return new Promise(async(resolve,reject)=>{
+//         let result = await db
+//         .get()
+//         .collection(collection.USER_COLLECTION)
+//         .updateOne(
+//           { number: num },
+//           { $set: { otp: newOtp } }
+//         )
+//         resolve(result)
+//       })
+// },
+replaceOtp: (num, newOtp) => {
+  return new Promise(async (resolve, reject) => {
+    let result = await db
+      .get()
+      .collection(collection.USER_COLLECTION)
+      .updateOne({ number: num},{$set:{ otp: newOtp }});
+    resolve(result);
+  });
+},
+
+findOtp: (num) => {
+  return new Promise(async (resolve, reject) => {
+    let otp = await db.get().collection(collection.USER_COLLECTION).findOne({ number: num });
+    resolve(otp);
+  });
+},
+//coupon management //
+// addCouponUser:(userId,coupon)=>{
+//   return new Promise(async(resolve,reject)=>{
+//      db.get().collection(collection.USER_COLLECTION).updateOne(
+//       { _id: ObjectId(userId) },
+//       { $push: { couponCodes: coupon } }
+//     ).then(()=>{
+//       resolve()
+//     })
+
+//     })
+//  },
+addCouponUser: (userId, coupon) => {
+  return new Promise(async (resolve, reject) => {
+    let coupons = await db.get().collection(collection.USER_COLLECTION)
+    .aggregate([
+      { $match: { _id: ObjectId (userId) } },
+      { $unwind: "$couponCodes" },
+      { $match: { "couponCodes.coupon": coupon } },
+    ]).toArray();
+    if (coupons.length) {
+      db.get()
+        .collection(collection.USER_COLLECTION)
+        .updateOne(
+          { _id: ObjectId(userId), "couponCodes.coupon": coupon },
+          { $inc: { "couponCodes.$.count": 1 } }
+        );
+    } else {
+      db.get()
+        .collection(collection.USER_COLLECTION)
+        .updateOne(
+          { _id: ObjectId(userId) },
+          { $push: { couponCodes: { coupon, count: 1 } } }
+        )
+        .then(() => {
+          resolve();
+        });
+    }
+  });
+},
+
+ deleteCoupon:(userId,usedCoupon) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const userCollection = db.get().collection(collection.USER_COLLECTION);
+      const user = await userCollection.findOne({ _id: ObjectId(userId) });
+      const couponCodes = user.couponCodes;
+      
+      // Find the index of the first occurrence of the coupon code
+      const index = couponCodes.indexOf(usedCoupon);
+      
+      // Remove the coupon code from the array at the specified index
+      if (index > -1) {
+        couponCodes.splice(index, 1);
+      }
+      
+      // Update the user document with the modified couponCodes array
+      await userCollection.updateOne(
+        { _id: ObjectId(userId) },
+        { $set: { couponCodes: couponCodes } }
+      );
+      resolve();
+    } catch (error) {
+      reject(error);
+    }
+  });
+ },
+
+ addAmountWallet : (amount, userId) => {
+  db.get()
+    .collection(collection.USER_COLLECTION)
+    .updateOne({ _id: ObjectId(userId) }, { $set: { walletAmount: amount } });
+},
+
+getOrder: (id) => {
+  return new Promise(async (resolve) => {
+    let order = await db
+      .get()
+      .collection(collection.ORDER_COLLECTION)
+      .findOne({ _id: ObjectId(id) });
+    resolve(order);
+  });
+},
+userDetails:(userId)=>{
+  return new Promise( async (resolve,reject)=>{
+    let user = await db.get().collection(collection.USER_COLLECTION).findOne({_id:ObjectId(userId)})
+    resolve(user);
+  })
+},
+addRefWallet: (refCode) => {
+  return new Promise((resolve, reject) => {
+    db.get().collection(collection.USER_COLLECTION).updateOne(
+      { referralCode: refCode },
+      { $inc: { walletAmount: 100 } }, // Increment the wallet field by 100
+      (error, response) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(response);
+        }
+      }
+    );
+  });
+},
+
+
+
+
+
+
+
 }
 
 
-  
-}
+
+
+
+    
+
 
 
 
