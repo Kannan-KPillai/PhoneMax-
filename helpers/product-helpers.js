@@ -101,9 +101,30 @@ module.exports={
             .toArray();
       
           const updatedProducts = products.map((product) => {
-            product.OfferPrice = product.price - (product.price * offerPer) / 100;
-            return product;
+            // const offerPrice = product.price - (product.price * offerPer) / 100;
+            const offerPrice = Math.round(product.price - (product.price * offerPer) / 100)
+            return { ...product, offerPrice };
           });
+      
+          // Update the documents in the collection with the new offer prices
+          await db.get()
+            .collection(collection.PRODUCT_COLLECTION)
+            .updateMany(
+              { category: catName },
+              { $set: { offerPrice: 0 } } // Initial value of offerPrice field
+            );
+      
+          // Bulk write operation to update offerPrice for each product
+          const bulkWriteOperations = updatedProducts.map((product) => ({
+            updateOne: {
+              filter: { _id: product._id },
+              update: { $set: { offerPrice: product.offerPrice } },
+            },
+          }));
+      
+          await db.get()
+            .collection(collection.PRODUCT_COLLECTION)
+            .bulkWrite(bulkWriteOperations);
       
           return updatedProducts;
         } catch (error) {
@@ -111,7 +132,6 @@ module.exports={
         }
       },
       
-
 
 
 

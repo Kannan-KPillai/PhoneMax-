@@ -175,24 +175,33 @@
     <div class="container flex">
       <div class="left">
         <div class="main_image" id="img-container">
-          <img src="{{this.product.photos.[0].fileName}}"  class="slide" style="width: 100%;"  data-zoom-image="{{this.product.photos.[0].fileName}}">
+          <img src="{{this.product.photos.[0].fileName}}" class="slide" style="width: 100%;"
+            data-zoom-image="{{this.product.photos.[0].fileName}}">
         </div>
         <div class="option flex">
           <img src="{{this.product.photos.[0].fileName}}" onclick="img(this.src)">
-          <img src="{{this.product.photos.[1].fileName}}"  onclick="img(this.src)">
-          <img src="{{this.product.photos.[2].fileName}}"  onclick="img(this.src)">
-          {{!-- <img src="{{this.product.photos.[3].fileName}}"  onclick="img(this.src)">
-          <img src="{{this.product.photos.[1].fileName}}"  onclick="img(this.src)">
-          <img src="{{this.product.photos.[3].fileName}}"  onclick="img(this.src)"> --}}
+          <img src="{{this.product.photos.[1].fileName}}" onclick="img(this.src)">
+          <img src="{{this.product.photos.[2].fileName}}" onclick="img(this.src)">
         </div>
       </div>
-      <div class="right">
+      {{!-- <div class="right">
         <h2><b>{{product.name}}</b></h2>
         <h4> <small>₹</small>{{product.price}} </h4>
         <p><i>{{product.description}}</i> </p>
-       <button onclick="addToCart('{{product._id}}')" class="btn btn-primary btn-sm mt-2">Add to Cart</button>   
-        </div>
+        <button onclick="addToCart('{{product._id}}')" class="btn btn-primary btn-sm mt-2">Add to Cart</button>
+      </div> --}}
+      <div class="right">
+        <h2><b>{{product.name}}</b></h2>
+        {{#if product.offerPrice}}
+        <h4><del style="color: red;"><small>₹</small>{{product.price}}</del></h4>
+        <h4><small>₹</small>{{product.offerPrice}}</h4>
+        {{else}}
+        <h4><small>₹</small>{{product.price}}</h4>
+        {{/if}}
+        <p><i>{{product.description}}</i></p>
+        <button onclick="addToCart('{{product._id}}')" class="btn btn-primary btn-sm mt-2">Add to Cart</button>
       </div>
+    </div>
     </div>
   </section>
   <script>

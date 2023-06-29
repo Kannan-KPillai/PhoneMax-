@@ -69,14 +69,10 @@
         
          <td>
                         {{#if (eq this.status "placed")}}
-                        {{!-- <a href="/admin/status-change?id={{this._id}}&&st=Shipped" class="btn btn-success btn-block"
-                            onclick="return confirm('Are you want to place shipped ?')">Shipped</a> --}}
                             <button class="btn btn-success btn-block shipped-btn" data-id="{{this._id}}" data-status="Shipped">Shipped</button>
 
                             {{/if}}
                           {{#if (eq this.status "Shipped")}}  
-                        {{!-- <a href="/admin/status-change?id={{this._id}}&&st=Delivered" class="btn btn-success btn-block"
-                            onclick="return confirm('Are you want to place delivered ?')">Delivered</a> --}}
                             <button class="btn btn-success btn-block delivered-btn" data-id="{{this._id}}" data-status="Delivered">Delivered</button>
 
                             {{/if}}

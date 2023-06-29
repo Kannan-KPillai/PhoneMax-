@@ -253,6 +253,27 @@ module.exports={
       resolve(cartItems)
     })
   },
+  checkOffer: (productId) => {
+    return new Promise((resolve, reject) => {
+      db.get()
+        .collection(collection.PRODUCT_COLLECTION)
+        .findOne({ _id: ObjectId(productId) })
+        .then((product) => {
+          if (product) {
+            const offerPrice = product.offerPrice || null;
+            resolve(offerPrice);
+          } else {
+            resolve(null);
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+  
+  
+
 
   getCartCount:(userId)=>{
     return new Promise(async(resolve,reject)=>{
@@ -347,7 +368,7 @@ module.exports={
               product: {
                 $mergeObjects: [
                   '$product',
-                  { price: { $toInt: '$product.price' } }
+                  { price: { $toInt: '$product.offerPrice' } }
                 ]
               }
             }
@@ -355,7 +376,7 @@ module.exports={
           {
             $group:{
               _id:null,
-              total:{$sum:{$multiply:['$quantity','$product.price']}}
+              total:{$sum:{$multiply:['$quantity','$product.offerPrice']}}
             }
           }
         ]).toArray();
@@ -771,8 +792,32 @@ addCouponUser: (userId, coupon) => {
  addAmountWallet : (amount, userId) => {
   db.get()
     .collection(collection.USER_COLLECTION)
+    .updateOne({ _id: ObjectId(userId) }, { $inc: { walletAmount: amount } });
+},
+deductAmountWallet : (amount, userId) => {
+  db.get()
+    .collection(collection.USER_COLLECTION)
     .updateOne({ _id: ObjectId(userId) }, { $set: { walletAmount: amount } });
 },
+ 
+ 
+ walletCredit:(amount,userId)=>{
+  const credit = {
+    amount,
+    date: new Date()
+  }
+  db.get().collection(collection.USER_COLLECTION).
+  updateOne({_id:ObjectId(userId)}, {$push:{walletCredit:credit}});
+ },
+
+ walletDebit:(amount,userId)=>{
+  const debit= {
+    amount,
+    date: new Date()
+  }
+  db.get().collection(collection.USER_COLLECTION).
+  updateOne({_id:ObjectId(userId)}, {$push:{walletDebit:debit}});
+ },
 
 getOrder: (id) => {
   return new Promise(async (resolve) => {

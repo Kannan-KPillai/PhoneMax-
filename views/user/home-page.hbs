@@ -68,17 +68,17 @@ background-repeat:no-repeat; background-size:cover; height: 400px; width:100%">
 
 
            {{!-- Latest products --}}
-
-      <section style="background-color: rgba(53, 53, 53, 1)">
+<section style="background-color: rgba(53, 53, 53, 1)">
   <div class="text-center container py-3">
     <h4 class="mt-4 mb-3" style="color: white;"><strong>Latest Mobile Phones For You</strong></h4>
 
-     <div class="row">
+    <div class="row">
       {{#each products}}
       <div class="col-lg-3 col-md-6 mb-3">
         <div class="card" style="background-color: rgba(53, 53, 53, 1); height: 100%;">
           <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light" data-mdb-ripple-color="light">
-            <a href="/productdetails/{{this._id}}"><img src="{{this.photos.[0].fileName}}" class="card-img-top" alt="..." /></a>
+            <a href="/productdetails/{{this._id}}"><img src="{{this.photos.[0].fileName}}" class="card-img-top"
+                alt="..." /></a>
             <a href="#!">
               <div class="mask">
                 <div class="d-flex justify-content-start align-items-end h-100">
@@ -93,14 +93,20 @@ background-repeat:no-repeat; background-size:cover; height: 400px; width:100%">
           <div class="card-body">
             <h5 class="card-title mb-2" style="color: white;">{{this.name}}</h5>
             <p style="color: white;">{{this.category}}</p>
-            <h6 class="mb-2" style="color: white;">{{this.price}}</h6>
+            <h6 class="mb-2" style="color: white;">
+              {{#if this.offerPrice}}
+              <del style="color: red;">{{this.price}}</del> {{this.offerPrice}}
+              {{else}}
+              {{this.price}}
+              {{/if}}
+            </h6>
           </div>
         </div>
       </div>
       {{/each}}
     </div>
   </div>
-</section> 
+</section>
 
 
 

@@ -59,15 +59,13 @@
           <thead class="thead-dark">
             <tr>
               <th scope="col">Category</th>
-              <th scope="col">Offers %</th>
               <th scope="col">Options</th>
             </tr>
           </thead>
           <tbody>
             {{#each category}}
             <tr>
-              <td>{{this.category}}</td>
-              <td>{{this.offer}}</td>
+              <td><strong>{{this.category}}</strong></td>
               <td>
                 <form action="/admin/offers/{{this.category}}" method="post">
                   <div class="form-group">

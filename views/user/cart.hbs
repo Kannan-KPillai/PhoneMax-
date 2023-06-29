@@ -183,9 +183,10 @@
               <!-- Quantity -->
 
               <!-- Price -->
-              <p class="text-start text-md-center">
-                <span></span><strong>₹{{this.product.price}}</strong>
-              </p>
+             <p class="text-start text-md-center">
+  <span></span><strong>₹{{#if this.product.offerPrice}}{{this.product.offerPrice}}{{else}}{{this.product.price}}{{/if}}</strong>
+</p>
+
               <!-- Price -->
             </div>
 
@@ -467,6 +468,7 @@
           } else {
             document.getElementById(proId).innerHTML = quantity + count;
             document.getElementById('total').innerHTML = response.total;
+            document.getElementById('totalPrice').innerHTML= response.total
           }
         }
       });

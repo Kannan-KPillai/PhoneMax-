@@ -331,7 +331,7 @@ router.post('/addBanner', (req, res) => {
         res.redirect('/admin/addBanner');
         return;
       }
-
+  
       const photos = req.files.map((file) => {
         const oldPath = file.path;
         const newPath = `${file.path}.png`;
@@ -459,13 +459,6 @@ router.get('/add-coupon',verifyLogin,(req,res)=>{
   })
   
   //**************offers post method ****************/
-// router.post('/offers/:id', async (req, res) => {
-//   let catName = req.params.category
-//   let offerPer = req.body.offerPercentage
-//   await productHelpers.findProCat(catName, offerPer).then((response)=> {
-//     res.redirect('/admin/offers')
-//   })
-// })
 router.post('/offers/:id',(req, res) => {
   try {
     console.log(req.body)
