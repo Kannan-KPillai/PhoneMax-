@@ -644,7 +644,7 @@ getBanners: () => {
     }
   });
 },
-
+    
 getUserByEmail: async (email) => {
   try {
     const user = await db.get().collection(collection.USER_COLLECTION).findOne({ Email: email });
@@ -653,7 +653,7 @@ getUserByEmail: async (email) => {
     throw error;
   }
 },
-
+   
 doUpdatePassword:(userId,newPassword)=>{
   return new Promise(async(resolve,reject)=>{
     try{
